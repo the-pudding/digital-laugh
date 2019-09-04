@@ -1,16 +1,19 @@
 <div class='intro'>
-	<h1 class='intro__hed'>{{doc.title}}</h1>
-	<p class='intro__dek'>{{doc.description}}</p>
-	<p class='intro__byline'>
-		<a href='{{meta.author2.url}}' target='_blank'>
-			<strong>{{meta.author2.name}}</strong>
-		</a> +
-		<a href='{{meta.author.url}}' target='_blank'>
-			<strong>{{meta.author.name}}</strong>
-		</a> +
-		<a href='{{meta.author3.url}}' target='_blank'>
-			<strong>{{meta.author3.name}}</strong>
-		</a>
-	</p>
-	<time class='intro__time'>Month 2019</time>
+	<div class='intro__top'>
+		<h1 class='intro__hed'>{{doc.hed}}</h1>
+		<h4 class='intro__dek'>{{doc.dek}}</h4>
+	</div>
+	
+	<div class='intro__bottom'>
+		<time class='intro__time'>September 2019</time>
+		<p class='intro__byline'>
+			<a href='{{meta.author2.url}}' target='_blank'>{{meta.author2.name}}</a><a href='{{meta.author.url}}' target='_blank'>{{meta.author.name}}</a><a href='{{meta.author3.url}}' target='_blank'>{{meta.author3.name}}</a>
+		</p>
+	</div>
+
+	<div class='intro__prelude'>
+		{{#each doc.intro}}
+		<p>{{{value}}}</p>
+		{{/each}}
+	</div>
 </div>

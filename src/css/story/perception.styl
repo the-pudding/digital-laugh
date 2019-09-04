@@ -1,0 +1,37 @@
+#perception
+	.figure__slider
+		max-width $column-width
+		margin 2rem auto
+
+		&.noUi-target
+			box-shadow none
+			border none
+			background-color $off-white
+		
+		&.noUi-horizontal
+			cursor pointer
+
+		.noUi-connect
+			background-color $fg
+
+		.noUi-handle
+			outline none
+			cursor pointer
+			&:before
+				display none
+			&:after
+				display none
+		
+
+	.figure__terms
+		margin-top 2rem
+		display flex
+		justify-content center
+		button
+			font-family $mono
+			background-color $off-white
+			padding 0.25em 0.5em
+			line-height 1
+			border-radius 16px
+			margin 0.5rem
+			border 2px solid $gray

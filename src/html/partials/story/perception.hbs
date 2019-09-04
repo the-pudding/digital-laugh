@@ -1,0 +1,14 @@
+<section id='perception'>
+	<div class='section__info'>
+		<h2>{{{doc.perception.hed}}}</h2>
+		<h4>{{{doc.perception.dek}}}</h4>
+	</div>
+	<figure class='section__figure'>
+		<ul class='figure__terms'>
+			{{#each doc.perception.terms}}
+			<li><button class='btn'>{{this}}</button></li>
+			{{/each}}
+		</ul>
+		<div class='figure__slider slider'></div>
+	</figure>
+</section>
