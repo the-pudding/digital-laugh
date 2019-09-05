@@ -8,6 +8,8 @@
 		"node": ">=8.0.0"
 	},
 	"dependencies": {
+		"@firebase/app": "0.4.15",
+		"@firebase/database": "0.5.1",
 		"lodash.debounce": "4.0.8",
 		"nouislider": "14.0.2",
 		"superagent": "5.1.0"

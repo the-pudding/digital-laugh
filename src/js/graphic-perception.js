@@ -1,5 +1,6 @@
 /* global d3 */
 import * as noUiSlider from 'nouislider';
+import db from './db';
 const $section = d3.select('#perception');
 
 function resize() { }
@@ -19,6 +20,16 @@ function setupSlider() {
 
 function init() {
 	setupSlider();	
+	db.setup();
+	const returner = db.getReturner();
+	console.log({ returner })
+
+	db.update({ key: 'lol', min: 5, max: 9 });
+	const value = db.getAnswer('lol');
+	console.log(value)
+	// db.setReturner();
+	// db.finish();
+	
 }
 
 export default { init, resize };

@@ -1,7 +1,8 @@
 #perception
 	.figure__slider
 		max-width $column-width
-		margin 2rem auto
+		margin 0 auto
+		margin-top 2rem
 
 		&.noUi-target
 			box-shadow none
@@ -24,9 +25,12 @@
 		
 
 	.figure__terms
-		margin-top 2rem
+		margin 2rem auto
+		max-width $column-width
 		display flex
 		justify-content center
+		flex-wrap wrap
+		
 		button
 			font-family $mono
 			background-color $off-white
@@ -35,3 +39,24 @@
 			border-radius 16px
 			margin 0.5rem
 			border 2px solid $gray
+			&:hover
+				background-color $secondary
+			&.is-active
+				background-color $secondary
+			&.is-complete
+				cursor not-allowed
+				opacity 0.5
+
+	.figure__scale
+		ul
+			margin 1rem auto
+			max-width $column-width
+			display flex
+			justify-content center
+			align-items flex-end
+		li
+			padding 0 3.25rem
+			&:first-of-type
+				padding-left 0
+			&:last-of-type
+				padding-right 0
