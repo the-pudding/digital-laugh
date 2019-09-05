@@ -3,14 +3,16 @@
 		<h2>{{{doc.perception.hed}}}</h2>
 		<h4>{{{doc.perception.dek}}}</h4>
 	</div>
-	<figure class='section__figure'>
-		<ul class='figure__terms'>
+	<div class='section__ui'>
+		<p class='ui__instructions instructions--1'>1. {{{doc.perception.instructions1}}}</p>
+		<ul class='ui__terms'>
 			{{#each doc.perception.terms}}
-			<li><button class='btn'>{{this}}</button></li>
+				<li><button class='btn'>{{this}}</button></li>
 			{{/each}}
 		</ul>
-		<div class='figure__slider slider'></div>
-		<div class='figure__scale'>
+		<p class='ui__instructions instructions--2'>2. {{{doc.perception.instructions2}}}</p>
+		<div class='ui__slider slider'></div>
+		<div class='ui__scale'>
 			<ul>
 				<li><img src='assets/images/scale/1.png'></li>
 				<li><img src='assets/images/scale/3.png'></li>
@@ -19,5 +21,8 @@
 				<li><img src='assets/images/scale/10.png'></li>
 			</ul>
 		</div>
+	</div>
+	<figure class='section__figure'>
+		
 	</figure>
 </section>
