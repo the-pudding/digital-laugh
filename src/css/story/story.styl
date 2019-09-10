@@ -1,11 +1,11 @@
 /* CUSTOM STORY STYLE */
 section
-	margin 6rem auto 3rem auto
+	margin 3em auto 3rem auto
 	
 .section__info
-	padding 3rem 1rem 6rem 1rem
-	background-color $primary
-	clip-path polygon(0 0, 100% 0, 100% 100%, 0 80%)
+	padding 3rem 1rem 3rem 1rem
+	// background-color $primary
+	// clip-path polygon(0 0, 100% 0, 100% 100%, 0 80%)
 	
 	h2
 		font-family $mono
@@ -13,9 +13,22 @@ section
 		max-width $column-width
 		margin 0 auto
 		set-type-size(xx-large, false)
-	h4
+	p
 		max-width $column-width
 		margin 0 auto
-		set-type-size(large, false)
 
 	
+.btn
+	font-family $mono
+	background-color $off-white
+	padding 0.25em 0.5em
+	line-height 1
+	border-radius 16px
+	margin 0.5rem
+	border 2px solid $gray
+	&:hover
+		background-color $secondary
+	&.is-active
+		background-color $secondary
+		border-color $fg
+		box-shadow 0 0 4px 2px rgba($fg, 0.25)

@@ -2,12 +2,15 @@
 import * as noUiSlider from 'nouislider';
 import db from './db';
 const $section = d3.select('#perception');
-const $ui = $section.select('.section__ui');
+const $stepPick = $section.select('.steps__pick');
+const $stepAnswer = $section.select('.steps__answer');
 const $figure = $section.select('.section__figure');
-const $scale = $ui.select('.ui__scale');
-const $slider = $ui.select('.ui__slider');
-const $termButton = $ui.selectAll('.ui__terms button');
-const $instructionsLaugh = $ui.select('.instructions--2 span');
+
+const $termButton = $stepPick.selectAll('.step__terms button');
+const $slider = $stepAnswer.select('.step__slider');
+const $scale = $stepAnswer.select('.step__scale');
+const $scaleItem = $scale.selectAll('.scale__item');
+const $instructionsLaugh = $stepAnswer.select('.step__instructions span');
 
 function resize() { }
 
@@ -27,23 +30,27 @@ function handleSliderChange([a, b]) {
 }
 
 function handleSliderSlide([a, b]) {
-	const min = +a;
-	const max = +b;
-	
+	const min = Math.round(+a);
+	const max = Math.round(+b);
+	$scaleItem.classed('is-active', d => d >= min && d<= max);
+}
+
+function setupScale() {
+	$scaleItem.each((d, i, n) => {
+		d3.select(n[i]).datum(i + 1);
+	});
 }
 
 function setupSlider() {
 	$slider.attr('disabled', true).classed('is-disabled', true);
 	$scale.classed('is-disabled', true);
-
+	const min = 1;
+	const max = 5;
 	const s = noUiSlider.create($slider.node(), {
-		start: [0, 10],
+		start: [min, max],
 		connect: true,
-		step: 1,
-		range: {
-			'min': 0,
-			'max': 10
-		},
+		// step: 1,
+		range: { min, max },
 		// pips: {
 		// 	mode: 'steps',
 		// 	density: 10
@@ -63,7 +70,7 @@ function setupDB() {
 	const returner = db.getReturner();
 	console.log({ returner })
 
-	db.update({ key: 'lol', min: 5, max: 9 });
+	db.update({ key: 'lol', min: 1, max: 5 });
 	const value = db.getAnswer('lol');
 	console.log(value)
 	// db.setReturner();
@@ -71,6 +78,7 @@ function setupDB() {
 }
 
 function init() {
+	setupScale();
 	setupSlider();
 	setupTermButtons();	
 	setupDB();
