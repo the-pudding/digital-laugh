@@ -105,6 +105,20 @@
 	.step__submit
 		text-align center
 		padding 1rem 0
+		&.is-hidden
+			display none
+	
 	.section__skip
 		margin-top 3rem
 		text-align center
+	
+	.pudding-chart
+		display block
+		.term .path--area
+			stroke none
+			fill $primary
+		.term .path--line
+			stroke $secondary
+			stroke-width 2px
+			fill none
+		

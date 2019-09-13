@@ -3,13 +3,17 @@ import '@firebase/database';
 import generateID from './generate-id';
 import checkStorage from './check-storage';
 
-const DEV = true;
+const DEV = false;
 let firebaseApp = null;
 let firebaseDB = null;
 let userData = {};
 let connected = false;
 
 const hasStorage = checkStorage('localStorage');
+
+function formatDecimal(d) {
+	return d3.format('.2f')(d);
+}
 
 function getAnswer(id) {
 	if (userData.answers) return userData.answers[id];
@@ -104,7 +108,7 @@ function getSubmissions(data) {
 }
 
 function update({ key, min, max }) {
-	userData.answers[key] = { key, min, max };
+	userData.answers[key] = { key, min: formatDecimal(min), max: formatDecimal(max) };
 	if (hasStorage)
 		window.localStorage.setItem(
 			'pudding_laugh_answers',

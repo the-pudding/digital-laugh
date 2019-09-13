@@ -1,1 +1,59 @@
-{"title":"Evolution of the Digital Laugh","description":"Lol, rofl, lmao, tehee, sksksk.","hed":"The Digital Laugh","dek":"Exploring its perception and evolution.","intro":[{"type":"text","value":"Laughter is complex. Even IRL <a href=https://www.zocalopublicsquare.org/2015/03/30/whats-the-difference-between-a-fake-hahaha-and-a-sincere-guffaw/ideas/nexus/ target=_blank>it is hard</a> to know a real one from a fake one. Online, it is even harder with fewer visual cues and a wider range of tools to express laughter. As internet language evolves, new forms of laughter spread like a cold in a classroom. If you aren’t beyond the “ha”s and “lol”s of days past, consider this your guide to the present."}],"perception":{"hed":"Perception","dek":"As with most lingo, the intent and perception of each laugh varies from person to person. Help us do some casual science to get a sense of how you use some of the most common laughs compared to other internet people.","instructions1":"Pick a laugh. Not familiar? Skip it!","instructions2":"Tell us how funny something <strong>really</strong> is when you use <span>it</span>.","scale":[{"value":"1","text":"Unamused, not smiling; feeling spiteful, even."},{"value":"2","text":"Neutral. Laugh possibly used as filler or to seem friendly. No physical response."},{"value":"3","text":"Release a single breath of air from mouth, perhaps smiling."},{"value":"4","text":"Visibly amused. Multiple puffs of air released or shaking slightly from laughter."},{"value":"5","text":"Laughing so hard that breathing becomes difficult; actually rolling on the floor."}],"terms":["lol","ha","sksksk","i’m dead","i’m literally laughing","hahaha","LOL","rofl","looool","🤣","eks dee","ffffff"],"skip":"Skip to results"},"evolution":{"hed":"Evolution","dek":"Times are changing. Stay woke."}}
+{
+	"title": "Evolution of the Digital Laugh",
+	"description": "Lol, rofl, lmao, tehee, sksksk.",
+	"hed": "The Digital Laugh",
+	"dek": "Exploring its perception and evolution.",
+	"intro": [
+		{
+			"type": "text",
+			"value": "Laughter is complex. Even IRL <a href=https://www.zocalopublicsquare.org/2015/03/30/whats-the-difference-between-a-fake-hahaha-and-a-sincere-guffaw/ideas/nexus/ target=_blank>it is hard</a> to know a real one from a fake one. Online, it is even harder with fewer visual cues and a wider range of tools to express laughter. As internet language evolves, new forms of laughter spread like a cold in a classroom. If you aren’t beyond the “ha”s and “lol”s of days past, consider this your guide to the present."
+		}
+	],
+	"perception": {
+		"hed": "Perception",
+		"dek": "As with most lingo, the intent and perception of each laugh varies from person to person. Help us do some casual science to get a sense of how you use some of the most common laughs compared to other internet people.",
+		"instructions1": "Pick a laugh. Not familiar? Skip it!",
+		"instructions2": "Tell us how funny something <strong>really</strong> is when you use <span>it</span>.",
+		"scale": [
+			{
+				"value": "1",
+				"text": "Unamused, not smiling; feeling spiteful, even."
+			},
+			{
+				"value": "2",
+				"text": "Neutral. Laugh possibly used as filler or to seem friendly. No physical response."
+			},
+			{
+				"value": "3",
+				"text": "Release a single breath of air from mouth, perhaps smiling."
+			},
+			{
+				"value": "4",
+				"text": "Visibly amused. Multiple puffs of air released or shaking slightly from laughter."
+			},
+			{
+				"value": "5",
+				"text": "Laughing so hard that breathing becomes difficult; actually rolling on the floor."
+			}
+		],
+		"terms": [
+			"lol",
+			"ha",
+			"sksksk",
+			"i’m dead",
+			"i’m literally laughing",
+			"hahaha",
+			"LOL",
+			"rofl",
+			"looool",
+			"🤣",
+			"eks dee",
+			"ffffff"
+		],
+		"skip": "Skip to results"
+	},
+	"evolution": {
+		"hed": "Evolution",
+		"dek": "Times are changing. Stay woke."
+	}
+}
