@@ -1,9 +1,12 @@
 #perception
 	.section__steps
-		display flex
-		max-width 100rem
-		justify-content center
+		background linear-gradient(to left, $secondary 49%, $primary 51%)
+	
+	.steps__inner
+		max-width 80rem
 		margin 0 auto
+		display flex
+		justify-content center
 
 	.step
 		padding 1rem
@@ -20,13 +23,37 @@
 		margin 0 auto
 		max-width $column-width
 		display flex
-		// justify-content space-around
 		flex-wrap wrap
-		
 		.btn
-			&.is-complete
+			// border none
+			// position relative
+			// padding 0.25em 0.5em
+			// &:before
+			// 	content ''
+			// 	position absolute
+			// 	z-index 0
+			// 	bottom 0
+			// 	right -8px
+			// 	height 10px
+			// 	width 12px
+			// 	background linear-gradient(to bottom, $white 0%, $white 100%)
+			// 	background-attachment fixed
+			// 	border-bottom-left-radius 6px
+				
+			// &:after
+			// 	content ''
+			// 	position absolute
+			// 	z-index 1
+			// 	bottom 0
+			// 	right -10px
+			// 	width 10px
+			// 	height 10px
+			// 	background $primary
+			// 	border-bottom-left-radius 8px
+			.is-complete
+				opacity 0.33
 				cursor not-allowed
-				opacity 0.5
+
 
 	.step__slider
 		max-width $column-width * 0.925
@@ -113,12 +140,31 @@
 		text-align center
 	
 	.pudding-chart
+		background-color $green-dark
 		display block
+		font-family $mono
+		
 		.term .path--area
 			stroke none
-			fill $primary
+			fill-opacity 0.75
+			// fill $primary
+		
 		.term .path--line
-			stroke $secondary
+			stroke $green-dark
 			stroke-width 2px
 			fill none
 		
+	figure .axis
+		display flex
+		font-family $mono
+		justify-content space-between
+		background-color $green-dark
+		padding-top 1rem
+		p
+			margin 0
+			padding 0 1rem
+			set-type-size(small, false)
+			line-height 1
+			color $white
+			text-align center
+			width 50%

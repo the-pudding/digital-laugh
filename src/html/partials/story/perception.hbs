@@ -1,32 +1,39 @@
 <section id='perception'>
+	
 	<div class='section__info'>
 		<h2>{{{doc.perception.hed}}}</h2>
 		<p>{{{doc.perception.dek}}}</p>
 	</div>
+
 	<div class='section__steps'>
-		<div class='steps__pick step'>
-			<p class='step__instructions'>1. {{{doc.perception.instructions1}}}</p>
-			<ul class='step__terms'>
-				{{#each doc.perception.terms}}
-					<li><button class='btn'>{{this}}</button></li>
-				{{/each}}
-			</ul>
-		</div>
-		<div class='steps__answer step'>
-			<p class='step__instructions'>2. {{{doc.perception.instructions2}}}</p>
-			<div class='step__slider slider'></div>
-			<div class='step__scale'>
-				<ul>
-					{{#each doc.perception.scale}}
-						<li class='scale__item'><img src='assets/images/scale/{{value}}.png'><span>{{{text}}}</span></li>
+		
+		<div class='steps__inner'>
+			<div class='steps__pick step'>
+				<p class='step__instructions'>1. {{{doc.perception.instructions1}}}</p>
+				<ul class='step__terms'>
+					{{#each doc.perception.terms}}
+						<li><button class='btn'>{{this}}</button></li>
 					{{/each}}
 				</ul>
 			</div>
-			<div class='step__submit is-hidden'>
-				<button class='btn'>Submit</button>
+			
+			<div class='steps__answer step'>
+				<p class='step__instructions'>2. {{{doc.perception.instructions2}}}</p>
+				<div class='step__slider slider'></div>
+				<div class='step__scale'>
+					<ul>
+						{{#each doc.perception.scale}}
+							<li class='scale__item'><img src='assets/images/scale/{{value}}.png'><span>{{{text}}}</span></li>
+						{{/each}}
+					</ul>
+				</div>
+				<div class='step__submit is-hidden'>
+					<button class='btn'>Submit</button>
+				</div>
+				<figure class='step__figure'></figure>
 			</div>
-			<figure class='step__figure'></figure>
 		</div>
+
 	</div>
 
 	<div class='section__skip'>
@@ -34,4 +41,5 @@
 	</div>
 
 	<figure class='section__figure is-hidden'></figure>
+
 </section>

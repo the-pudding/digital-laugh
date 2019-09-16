@@ -1,3 +1,5 @@
+import generateID from '../generate-id';
+
 /*
  USAGE (example: line chart)
  1. c+p this template to a new file (line.js)
@@ -12,14 +14,14 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
     const $sel = d3.select(el);
     let data = $sel.datum() || [];
     // dimension stuff
-    const MAX_HEIGHT = 100;
+    const MAX_HEIGHT = 96;
     const OFFSET = 0.67;
     let width = 0;
     let height = 0;
-    const marginTop = 20;
-    const marginBottom = 20;
-    const marginLeft = 20;
-    const marginRight = 20;
+    const marginTop = 32;
+    const marginBottom = 32;
+    const marginLeft = 32;
+    const marginRight = 32;
 
     // scales
     const scaleX = d3.scaleLinear();
@@ -31,20 +33,39 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
     let $svg = null;
     let $axis = null;
     let $vis = null;
+    let $linearGradient = null;
+
+    let gradientID = null;
+    let chartHeight = 0;
 
     // helper functions
+    function setupGradient() {
+      gradientID = `gradient-${generateID({ numbers: false })}`;
+
+      $linearGradient = $svg
+        .append('linearGradient')
+        .attr('id', gradientID)
+        .attr('gradientUnits', 'userSpaceOnUse');
+    }
 
     const Chart = {
       // called once at start
       init() {
+        $axis = $sel.append('div').attr('class', 'axis');
+        $axis.append('p').html('&larr; Less Funny');
+        $axis.append('p').html('More Funny &rarr;');
+
         $svg = $sel.append('svg').attr('class', 'pudding-chart');
+
+        setupGradient();
+
         const $g = $svg.append('g');
 
         // offset chart for margins
         $g.attr('transform', `translate(${marginLeft}, ${marginTop})`);
 
         // create axis
-        $axis = $svg.append('g').attr('class', 'g-axis');
+        // $axis = $svg.append('g').attr('class', 'g-axis');
 
         // setup viz group
         $vis = $g.append('g').attr('class', 'g-vis');
@@ -61,11 +82,30 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
       resize() {
         // defaults to grabbing dimensions from container element
         width = $sel.node().offsetWidth - marginLeft - marginRight;
-        height = MAX_HEIGHT * data.length * OFFSET - marginTop - marginBottom;
+
+        chartHeight = MAX_HEIGHT;
+        height = chartHeight + (data.length - 1) * MAX_HEIGHT * OFFSET;
 
         $svg
           .attr('width', width + marginLeft + marginRight)
           .attr('height', height + marginTop + marginBottom);
+
+        $linearGradient
+          .attr('x1', 0)
+          .attr('y1', 0)
+          .attr('x2', width)
+          .attr('y2', 0);
+
+        $linearGradient
+          .selectAll('stop')
+          .data([
+            { offset: 0, color: '#61E8E1' },
+            { offset: 1, color: '#FFFA5D' },
+          ])
+          .join('stop')
+          .attr('offset', d => d.offset)
+          .attr('stop-color', d => d.color);
+
         return Chart;
       },
       // update scales and render chart
@@ -77,7 +117,7 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
 
         scaleX.domain(valueExtent).range([0, width]);
 
-        scaleY.domain([0, maxCount]).range([MAX_HEIGHT, 0]);
+        scaleY.domain([0, maxCount]).range([MAX_HEIGHT - 10, 0]);
 
         generateLine.x(d => scaleX(d.value)).y(d => scaleY(d.count));
 
@@ -101,10 +141,12 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
           'transform',
           (d, i) => `translate(0, ${i * MAX_HEIGHT * OFFSET})`
         );
+
         $term
           .select('.path--area')
           .datum(d => d.histogram)
-          .attr('d', generateArea);
+          .attr('d', generateArea)
+          .style('fill', `url(#${gradientID})`);
 
         $term
           .select('.path--line')

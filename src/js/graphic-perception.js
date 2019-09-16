@@ -16,8 +16,10 @@ const $instructionsLaugh = $stepAnswer.select('.step__instructions span');
 const $submit = $stepAnswer.select('.step__submit');
 const $submitButton = $submit.select('.step__submit button');
 const $answerFigure = $stepAnswer.select('.step__figure');
+const $allFigure = $section.select('.section__figure');
 
-const RESULTS_URL = 'https://pudding.cool/2019/09/digital-laugh-data/data.json';
+const VERSION = Date.now();
+const RESULTS_URL = `https://pudding.cool/2019/09/digital-laugh-data/data.json?version=${VERSION}`;
 const SLIDER_MIN = 1;
 const SLIDER_MAX = 5;
 const SLIDER_STEP = 0.05;
@@ -90,9 +92,7 @@ function setupDB() {
   const returner = db.getReturner();
   console.log({ returner });
 
-  // db.update({ key: 'lol', min: 1.05, max: 3.1 });
-  // const value = db.getAnswer('lol');
-  // console.log(value);
+  db.update({ key: 'ha', min: '4.05', max: '4.75' });
   // db.setReturner();
   // db.finish();
 }
@@ -100,7 +100,7 @@ function setupDB() {
 function setupResults() {
   // create the charts
   answerChart = $answerFigure.puddingChartRidgeline();
-  allChart = null;
+  allChart = $allFigure.puddingChartRidgeline();
 
   $submitButton.on('click', handleSubmitClick);
 
@@ -108,6 +108,26 @@ function setupResults() {
     .then(raw => {
       console.log(raw.updated);
       resultsData = raw.results;
+
+      allChart
+        .data(resultsData)
+        .resize()
+        .render();
+
+      // d3.range(100).map(() => {
+      //   let min = d3.format('.2f')(1 + Math.random());
+      //   const max = d3.format('.2f')(2.5 + Math.random() * 2);
+      //   min =
+      //     min.charAt(3) === '0' || min.charAt(3) === '5'
+      //       ? min
+      //       : `${min.substring(0, 3)}0`;
+      //   d3.range(min, max, 0.05).forEach(v => {
+      //     const r = d3.format('.2f')(v);
+      //     const m = resultsData[0].histogram.find(h => h.value === r);
+      //     m.count += 1;
+      //   });
+      // });
+      console.log(resultsData);
     })
     .catch(console.error);
 }
