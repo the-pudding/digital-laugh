@@ -104,7 +104,6 @@
 	.step__scale
 		&.is-disabled
 			opacity 0.5
-			filter grayscale(100%)
 
 		ul
 			margin 1rem auto
@@ -114,14 +113,18 @@
 			align-items flex-start
 		
 		li
-			// width 10rem
-			// filter grayscale(100%)
 			width 20%
 			padding 0 0.5rem
-			color $gray-light
+			color darken($secondary, 35)
+			&:nth-of-type(4) svg
+				transform-origin 50% 100%
+				animation waddle 2000ms ease-in-out alternate infinite 
+			&:last-of-type svg
+				transform-origin 50% 100%
+				animation roll 750ms ease-in-out alternate infinite 
 			&.is-active
 				filter grayscale(0)
-				color $gray-dark
+				color darken($secondary, 50)
 
 		span
 			display block
@@ -187,3 +190,21 @@
 			color $white
 			text-align center
 			width 50%
+
+@keyframes waddle
+	0%
+		transform rotate(0)
+	75%
+		transform rotate(-1deg)
+	85%
+		transform rotate(1deg)
+	95%
+		transform rotate(-1deg)
+	100%
+		transform rotate(1deg)
+
+@keyframes roll
+	0%
+		transform rotate(-5deg)
+	100%
+		transform rotate(5deg)
