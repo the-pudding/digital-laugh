@@ -3,7 +3,7 @@ import '@firebase/database';
 import generateID from './generate-id';
 import checkStorage from './check-storage';
 
-const DEV = false;
+const DEV = true;
 let firebaseApp = null;
 let firebaseDB = null;
 let userData = {};

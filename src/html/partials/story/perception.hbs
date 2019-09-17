@@ -23,21 +23,24 @@
 				<div class='step__scale'>
 					<ul>
 						{{#each doc.perception.scale}}
-							<li class='scale__item'><img src='assets/images/scale/{{value}}.png'><span>{{{text}}}</span></li>
+							<li class='scale__item'><img inline src='scale-{{value}}.svg'><span>{{{text}}}</span></li>
 						{{/each}}
 					</ul>
 				</div>
+				
+				<figure class='step__figure'></figure>
+
 				<div class='step__submit is-hidden'>
 					<button class='btn'>Submit</button>
 				</div>
-				<figure class='step__figure'></figure>
+				
 			</div>
 		</div>
 
 	</div>
 
 	<div class='section__skip'>
-		<button class='btn'>{{{doc.perception.skip}}}</button>
+		<button class='btn btn--border'>{{{doc.perception.skip}}}</button>
 	</div>
 
 	<figure class='section__figure is-hidden'></figure>

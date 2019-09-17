@@ -34,6 +34,7 @@ function handleSubmitClick() {
   $submit.classed('is-hidden', true);
   const term = $submit.attr('data-term');
   answerChart.data(resultsData.filter(d => d.key === term));
+  $answerFigure.classed('is-visible', true);
 }
 
 function handleTermClick() {
@@ -45,6 +46,7 @@ function handleTermClick() {
   $scale.classed('is-disabled', false);
   $instructionsLaugh.text(`${term}`).classed('is-active', true);
   $submit.classed('is-hidden', false).attr('data-term', term);
+  $answerFigure.classed('is-visible', false);
 }
 
 function handleSliderChange([a, b]) {

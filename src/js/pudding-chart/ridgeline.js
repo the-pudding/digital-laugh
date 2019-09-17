@@ -84,7 +84,8 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
         width = $sel.node().offsetWidth - marginLeft - marginRight;
 
         chartHeight = MAX_HEIGHT;
-        height = chartHeight + (data.length - 1) * MAX_HEIGHT * OFFSET;
+        const numRidges = Math.max(0, data.length - 1);
+        height = chartHeight + numRidges * MAX_HEIGHT * OFFSET;
 
         $svg
           .attr('width', width + marginLeft + marginRight)

@@ -18,6 +18,14 @@
 	.steps__answer
 		width 70%
 		background-color $secondary
+		position relative
+
+	.step__figure
+		max-width $column-width
+		margin 0 auto
+		opacity 0
+		&.is-visible
+			opacity 1
 
 	.step__terms
 		margin 0 auto
@@ -100,21 +108,18 @@
 			max-width $column-width
 			display flex
 			justify-content space-between
-			align-items flex-end
+			align-items flex-start
 		
 		li
 			// width 10rem
-			filter grayscale(100%)
+			// filter grayscale(100%)
 			width 20%
 			padding 0 0.5rem
 			color $gray-light
-			&:first-of-type
-				padding-left 0
-			&:last-of-type
-				padding-right 0
 			&.is-active
 				filter grayscale(0)
 				color $gray-dark
+
 		span
 			display block
 			margin-top 0.5rem
@@ -132,6 +137,12 @@
 	.step__submit
 		text-align center
 		padding 1rem 0
+		position absolute
+		width 100%
+		bottom $chart-height * 0.75
+		left 0
+		transform translateY(50%)
+
 		&.is-hidden
 			display none
 	
