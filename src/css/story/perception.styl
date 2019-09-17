@@ -26,6 +26,9 @@
 		opacity 0
 		&.is-visible
 			opacity 1
+		
+		text
+			display none
 
 	.step__terms
 		margin 0 auto
@@ -164,6 +167,11 @@
 			stroke $green-dark
 			stroke-width 2px
 			fill none
+		
+		text
+			fill $white
+			set-type-size(large, false)
+			font-weight 700
 		
 	figure .axis
 		display flex

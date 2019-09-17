@@ -23,7 +23,8 @@
 				"singleQuote": true,
 				"printWidth": 80
 			}
-		]
+		],
+		"no-console": "off"
 	},
 	"plugins": [
 		"prettier"

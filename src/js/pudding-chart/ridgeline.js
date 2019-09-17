@@ -64,16 +64,12 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
         // offset chart for margins
         $g.attr('transform', `translate(${marginLeft}, ${marginTop})`);
 
-        // create axis
-        // $axis = $svg.append('g').attr('class', 'g-axis');
-
         // setup viz group
         $vis = $g.append('g').attr('class', 'g-vis');
 
         generateLine.curve(d3.curveMonotoneX);
 
         generateArea.curve(d3.curveMonotoneX);
-        // .defined(d => d.count);
 
         Chart.resize();
         Chart.render();
@@ -132,9 +128,9 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
           .data(data)
           .join(enter => {
             const $t = enter.append('g').attr('class', 'term');
-
             $t.append('path').attr('class', 'path--area');
             $t.append('path').attr('class', 'path--line');
+            $t.append('text');
             return $t;
           });
 
@@ -153,6 +149,8 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
           .select('.path--line')
           .datum(d => d.histogram)
           .attr('d', generateLine);
+
+        $term.select('text').text(d => d.key);
 
         return Chart;
       },
