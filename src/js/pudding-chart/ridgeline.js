@@ -18,12 +18,14 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
     const OFFSET = 0.67;
     const YELLOW = '#FFFA5D';
     const ORANGE = '#FEA850';
-    let width = 0;
-    let height = 0;
+
     const marginTop = 32;
     const marginBottom = 32;
     const marginLeft = 32;
     const marginRight = 32;
+    let width = 0;
+    let height = 0;
+    let term = null;
 
     // scales
     const scaleX = d3.scaleLinear();
@@ -97,7 +99,7 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
 
         $linearGradient
           .selectAll('stop')
-          .data([{ offset: 0, color: YELLOW }, { offset: 1, color: ORANGE }])
+          .data([{ offset: 0, color: ORANGE }, { offset: 1, color: YELLOW }])
           .join('stop')
           .attr('offset', d => d.offset)
           .attr('stop-color', d => d.color);
@@ -174,6 +176,13 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
         if (!arguments.length) return data;
         data = val;
         $sel.datum(data);
+        Chart.resize();
+        Chart.render();
+        return Chart;
+      },
+      highlight(val) {
+        if (!arguments.length) return term;
+        term = val;
         Chart.resize();
         Chart.render();
         return Chart;

@@ -62,7 +62,7 @@ function moveButton(el) {
 function handleSubmitClick() {
   $submitButton.classed('is-hidden', true);
   const term = $submitButton.attr('data-term');
-  chart.data(resultsData.filter(d => d.key === term));
+  chart.highlight(term);
   $figure.classed('is-visible', true);
 }
 
