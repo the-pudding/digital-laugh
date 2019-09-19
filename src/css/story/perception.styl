@@ -1,72 +1,100 @@
 #perception
-	.section__steps
-		background linear-gradient(to left, $secondary 49%, $primary 51%)
-	
-	.steps__inner
-		max-width 80rem
+	.survey__instructions
+		max-width $column-width
 		margin 0 auto
-		display flex
-		justify-content center
-
-	.step
-		padding 1rem
-
-	.steps__pick
-		width 30%
-		background-color $primary
+		margin-top 2rem
+		p
+			margin 0
 	
-	.steps__answer
-		width 70%
-		background-color $secondary
-		position relative
+		p:first-of-type
+			display block
+		p:last-of-type
+			display none
+			color $primary
+		
+		&.is-answering
+			p:first-of-type
+				display none
+			p:last-of-type
+				display block
 
-	.step__figure
+		.instructions
+			set-type-size(medium, true)
+			font-family $mono
+			font-weight 700
+			text-align center
+		
+
+	.survey__figure
 		max-width $column-width
 		margin 0 auto
 		opacity 0
 		&.is-visible
 			opacity 1
-		
-		text
-			display none
 
-	.step__terms
+	.survey__terms
 		margin 0 auto
-		max-width $column-width
+		padding 2rem 0
+		max-width 50rem
 		display flex
 		flex-wrap wrap
-		.btn
-			// border none
-			// position relative
-			// padding 0.25em 0.5em
-			// &:before
-			// 	content ''
-			// 	position absolute
-			// 	z-index 0
-			// 	bottom 0
-			// 	right -8px
-			// 	height 10px
-			// 	width 12px
-			// 	background linear-gradient(to bottom, $white 0%, $white 100%)
-			// 	background-attachment fixed
-			// 	border-bottom-left-radius 6px
-				
-			// &:after
-			// 	content ''
-			// 	position absolute
-			// 	z-index 1
-			// 	bottom 0
-			// 	right -10px
-			// 	width 10px
-			// 	height 10px
-			// 	background $primary
-			// 	border-bottom-left-radius 8px
-			.is-complete
+		position relative
+
+		li
+			position relative
+			// transition opacity 500ms ease-in-out
+			&.is-hidden
+				opacity 0
+				button
+					pointer-events none
+
+			&.is-active
+				opacity 1
+				position absolute
+				pointer-events none
+				button
+					background-color $primary
+					color $white
+					&:before
+						background linear-gradient(to bottom, $primary 0%, $primary 100%)
+
+			&.is-complete
 				opacity 0.33
 				cursor not-allowed
 
+		button
+			position relative
+			text-transform none
+			&:before
+				content ''
+				position absolute
+				z-index 0
+				bottom 0
+				right -8px
+				height 8px
+				width 16px
+				background linear-gradient(to bottom, $white 0%, $white 100%)
+				background-attachment fixed
+				border-bottom-left-radius 8px
+			
+			&:after
+				content ''
+				position absolute
+				z-index 1
+				bottom 0
+				right -10px
+				width 12px
+				height 8px
+				background $bg
+				border-bottom-left-radius 8px
 
-	.step__slider
+			&:hover
+				background-color $secondary
+				&:before
+					background linear-gradient(to bottom, $secondary 0%, $secondary 100%)
+
+
+	.survey__slider
 		max-width $column-width * 0.925
 		margin 0 auto
 		&.is-disabled
@@ -78,30 +106,33 @@
 
 		&.noUi-target
 			box-shadow none
-			// border none
-			border-color $gray
-			border-width 2px
+			border-color $fg
+			border-width 0
 			border-radius 4px
-			background-color $off-white
+			background-color rgba($fg, 0.25)
 		
 		&.noUi-horizontal
 			cursor pointer
+			height 8px
 
 		.noUi-connect
-			background-color $gray-dark
+			background-color $secondary
 
 		.noUi-handle
 			cursor pointer
-			border-color $gray-dark
-			border-width 2px
-			border-radius 8px
+			border-color $fg
+			border-width 3px
+			border-radius 50%
+			width 32px
+			height 32px
+			top -12px
 			background-color $white
 			&:before
 				display none
 			&:after
 				display none
 
-	.step__scale
+	.survey__scale
 		&.is-disabled
 			opacity 0.5
 
@@ -115,7 +146,11 @@
 		li
 			width 20%
 			padding 0 0.5rem
-			color darken($secondary, 35)
+			color darken($bg, 35)
+			text-align center
+			font-family $mono
+			svg
+				opacity 0.33
 			&:nth-of-type(4) svg
 				transform-origin 50% 100%
 				animation waddle 2000ms ease-in-out alternate infinite 
@@ -123,41 +158,56 @@
 				transform-origin 50% 100%
 				animation roll 750ms ease-in-out alternate infinite 
 			&.is-active
-				filter grayscale(0)
-				color darken($secondary, 50)
+				color $fg
+				svg
+					opacity 1
 
 		span
 			display block
 			margin-top 0.5rem
 			set-type-size(x-small, false)
 			line-height 1.35
+		
 
-	.step__instructions
-		set-type-size(root)
-		font-family $mono
-		color $fg
-		max-width $column-width
-		margin 1rem auto
-
-
-	.step__submit
-		text-align center
+	.survey__nav
 		padding 1rem 0
-		position absolute
-		width 100%
-		bottom $chart-height * 0.75
-		left 0
-		transform translateY(50%)
-
-		&.is-hidden
-			display none
+		max-width $column-width
+		margin 0 auto
+		display flex
+		flex-direction column
+		align-items center
+		justify-content center
 	
-	.section__skip
-		margin-top 3rem
-		text-align center
+		&.is-hidden
+			visibility hidden
+
+		button
+			margin 0
+			margin-bottom 0.5em
+
+		.btn--submit
+			text-transform uppercase
+			set-type-size(x-large, false)
+			border-radius 32px
+			padding 0.5em 2em
+			visibility visible
+			&.is-hidden
+				visibility hidden
+		
+		.btn--skip, .btn--another
+			background-color transparent
+			set-type-size(small, false)
+			text-transform none
+			&:hover
+				background-color $secondary
+			&.is-hidden
+				display none
+		
+		.btn--another
+			font-weight 400
+
 	
 	.pudding-chart
-		background-color $green-dark
 		display block
 		font-family $mono
 		
@@ -167,27 +217,32 @@
 			// fill $primary
 		
 		.term .path--line
-			stroke $green-dark
+			stroke $bg
 			stroke-width 2px
 			fill none
+
+		.term .baseline
+			stroke-width 2px
+			stroke $fg
 		
 		text
-			fill $white
-			set-type-size(large, false)
+			fill $fg
+			set-type-size(root, false)
 			font-weight 700
+
 		
 	figure .axis
 		display flex
 		font-family $mono
 		justify-content space-between
-		background-color $green-dark
+		// background-color $green-dark
 		padding-top 1rem
 		p
 			margin 0
 			padding 0 1rem
 			set-type-size(small, false)
 			line-height 1
-			color $white
+			color $fg
 			text-align center
 			width 50%
 

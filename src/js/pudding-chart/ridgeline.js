@@ -16,6 +16,8 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
     // dimension stuff
     const MAX_HEIGHT = 96;
     const OFFSET = 0.67;
+    const YELLOW = '#FFFA5D';
+    const ORANGE = '#FEA850';
     let width = 0;
     let height = 0;
     const marginTop = 32;
@@ -95,10 +97,7 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
 
         $linearGradient
           .selectAll('stop')
-          .data([
-            { offset: 0, color: '#61E8E1' },
-            { offset: 1, color: '#FFFA5D' },
-          ])
+          .data([{ offset: 0, color: YELLOW }, { offset: 1, color: ORANGE }])
           .join('stop')
           .attr('offset', d => d.offset)
           .attr('stop-color', d => d.color);
@@ -130,7 +129,14 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
             const $t = enter.append('g').attr('class', 'term');
             $t.append('path').attr('class', 'path--area');
             $t.append('path').attr('class', 'path--line');
-            $t.append('text');
+            $t.append('line')
+              .attr('class', 'baseline')
+              .attr('x1', 0);
+            $t.append('text')
+              .attr('x', 0)
+              .attr('y', 0)
+              .attr('alignment-baseline', 'hanging');
+
             return $t;
           });
 
@@ -150,7 +156,16 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
           .datum(d => d.histogram)
           .attr('d', generateLine);
 
-        $term.select('text').text(d => d.key);
+        $term
+          .select('.baseline')
+          .attr('x2', scaleX.range()[1])
+          .attr('y1', scaleY.range()[0])
+          .attr('y2', scaleY.range()[0]);
+
+        $term
+          .select('text')
+          .text(d => d.key)
+          .attr('y', scaleY.range()[0] + 8);
 
         return Chart;
       },

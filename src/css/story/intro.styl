@@ -1,15 +1,17 @@
 .intro
 	margin 0 auto
+	padding 0 1rem
 
 	&__hed
-		max-width 60rem
+		max-width $column-width
 		margin 0 auto
-		text-align center
 		font-family $mono
-		set-type-size(xxxxx-large, false)
+		font-size 128px
 		line-height 1
 		font-weight 700
-		letter-spacing 0em
+		span
+			// display block
+			color $secondary
 
 		
 	&__dek
@@ -24,30 +26,23 @@
 		margin 0 auto
 		set-type-size(small)
 		font-family $mono
-		a
-			margin-right 0.5em
-
-	&__time
-		display block
-		max-width $column-width
-		margin 0 auto
-		set-type-size(small)
-		font-family $mono
 		font-weight 700
-
+		margin-bottom 3rem
+		// a
+		// 	margin-right 0.5em
 
 	&__top
-		padding 6rem 1rem
-		background-color $secondary
+		padding 6rem 0
+		// background-color $secondary
 		// clip-path polygon(0 0, 100% 0, 100% 80%, 0 100%)
 	
-	&__bottom
-		padding 3rem 1rem 1rem 1rem
+	// &__bottom
+	// 	padding-top 3rem
 
 	&__prelude
 		max-width $column-width
 		margin 0 auto
-		padding 0 1rem
+		// padding 0
 	
 	&__images
 		margin-top 2rem

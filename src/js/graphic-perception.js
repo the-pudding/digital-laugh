@@ -4,19 +4,21 @@ import db from './db';
 import './pudding-chart/ridgeline';
 
 const $section = d3.select('#perception');
-const $stepPick = $section.select('.steps__pick');
-const $stepAnswer = $section.select('.steps__answer');
-const $figure = $section.select('.section__figure');
+const $survey = $section.select('.section__survey');
+const $instructions = $survey.select('.survey__instructions');
+// const $instructions1 = $instructions.select('.instructions--1');
+// const $instructions2 = $instructions.select('.instructions--2');
+const $terms = $survey.select('.survey__terms');
+const $termLi = $terms.selectAll('.survey__terms li');
+const $slider = $survey.select('.survey__slider');
+const $scale = $survey.select('.survey__scale');
+const $figure = $survey.select('.survey__figure');
+const $nav = $survey.select('.survey__nav');
 
-const $termButton = $stepPick.selectAll('.step__terms button');
-const $slider = $stepAnswer.select('.step__slider');
-const $scale = $stepAnswer.select('.step__scale');
+const $submitButton = $nav.select('.btn--submit');
+const $skipButton = $nav.select('.btn--skip');
+const $anotherButton = $nav.select('.btn--another');
 const $scaleItem = $scale.selectAll('.scale__item');
-const $instructionsLaugh = $stepAnswer.select('.step__instructions span');
-const $submit = $stepAnswer.select('.step__submit');
-const $submitButton = $submit.select('.step__submit button');
-const $answerFigure = $stepAnswer.select('.step__figure');
-const $allFigure = $section.select('.section__figure');
 
 const VERSION = Date.now();
 const RESULTS_URL = `https://pudding.cool/2019/09/digital-laugh-data/data.json?version=${VERSION}`;
@@ -25,28 +27,59 @@ const SLIDER_MAX = 5;
 const SLIDER_STEP = 0.05;
 
 let resultsData = [];
-let answerChart = null;
-let allChart = null;
+let chart = null;
 
 function resize() {}
 
+function moveButton(el) {
+  const $li = d3.select(el);
+  const bboxLi = el.getBoundingClientRect();
+  const bboxTerms = $terms.node().getBoundingClientRect();
+
+  const leftStart = bboxLi.left - bboxTerms.left;
+  const topStart = bboxLi.top - bboxTerms.top;
+  $li
+    .style('top', `${topStart}px`)
+    .style('left', `${leftStart}px`)
+    .classed('is-active', true);
+
+  const centerX = bboxTerms.width / 2;
+  const centerY = bboxTerms.height / 2;
+
+  const leftStop = centerX - bboxLi.width / 2;
+  const topStop = centerY - bboxLi.height / 2;
+
+  $li
+    .transition()
+    .delay(0)
+    .duration(750)
+    .ease(d3.easeCubicInOut)
+    .style('top', `${topStop}px`)
+    .style('left', `${leftStop}px`)
+    .style('transform', 'scale(2)');
+}
+
 function handleSubmitClick() {
-  $submit.classed('is-hidden', true);
-  const term = $submit.attr('data-term');
-  answerChart.data(resultsData.filter(d => d.key === term));
-  $answerFigure.classed('is-visible', true);
+  $submitButton.classed('is-hidden', true);
+  const term = $submitButton.attr('data-term');
+  chart.data(resultsData.filter(d => d.key === term));
+  $figure.classed('is-visible', true);
 }
 
 function handleTermClick() {
-  const $btn = d3.select(this);
+  const el = this.parentNode;
+  const $li = d3.select(el);
+  const $btn = $li.select('button');
   const term = $btn.text();
-  $termButton.classed('is-active', false);
-  $btn.classed('is-active', true);
+  $termLi.classed('is-active', false);
+  $termLi.classed('is-hidden', true);
   $slider.classed('is-disabled', false).attr('disabled', null);
   $scale.classed('is-disabled', false);
-  $instructionsLaugh.text(`${term}`).classed('is-active', true);
-  $submit.classed('is-hidden', false).attr('data-term', term);
-  $answerFigure.classed('is-visible', false);
+  $instructions.classed('is-answering', true);
+  $submitButton.classed('is-hidden', false).attr('data-term', term);
+  $figure.classed('is-visible', false);
+
+  moveButton(el);
 }
 
 function handleSliderChange([a, b]) {
@@ -86,7 +119,7 @@ function setupSlider() {
 }
 
 function setupTermButtons() {
-  $termButton.on('click', handleTermClick);
+  $termLi.select('button').on('click', handleTermClick);
 }
 
 function setupDB() {
@@ -101,8 +134,7 @@ function setupDB() {
 
 function setupResults() {
   // create the charts
-  answerChart = $answerFigure.puddingChartRidgeline();
-  allChart = $allFigure.puddingChartRidgeline();
+  chart = $figure.puddingChartRidgeline();
 
   $submitButton.on('click', handleSubmitClick);
 
@@ -111,25 +143,10 @@ function setupResults() {
       console.log(raw.updated);
       resultsData = raw.results;
 
-      allChart
+      chart
         .data(resultsData)
         .resize()
         .render();
-
-      // d3.range(100).map(() => {
-      //   let min = d3.format('.2f')(1 + Math.random());
-      //   const max = d3.format('.2f')(2.5 + Math.random() * 2);
-      //   min =
-      //     min.charAt(3) === '0' || min.charAt(3) === '5'
-      //       ? min
-      //       : `${min.substring(0, 3)}0`;
-      //   d3.range(min, max, 0.05).forEach(v => {
-      //     const r = d3.format('.2f')(v);
-      //     const m = resultsData[0].histogram.find(h => h.value === r);
-      //     m.count += 1;
-      //   });
-      // });
-      console.log(resultsData);
     })
     .catch(console.error);
 }
