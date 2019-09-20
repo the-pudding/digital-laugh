@@ -59,8 +59,8 @@
 						background linear-gradient(to bottom, $primary 0%, $primary 100%)
 
 			&.is-complete
+				pointer-events none
 				opacity 0.33
-				cursor not-allowed
 
 		button
 			position relative
@@ -180,6 +180,9 @@
 	
 		&.is-hidden
 			visibility hidden
+
+		.spacer
+			padding 1rem 0
 
 		button
 			margin 0

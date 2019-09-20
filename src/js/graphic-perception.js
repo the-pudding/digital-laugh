@@ -1,5 +1,6 @@
 /* global d3 */
 import * as noUiSlider from 'nouislider';
+import MoveTo from 'moveto';
 import db from './db';
 import './pudding-chart/ridgeline';
 
@@ -17,12 +18,15 @@ const $submitButton = $nav.select('.btn--submit');
 const $anotherButton = $nav.select('.btn--another');
 const $skipButton = $nav.select('.btn--skip');
 const $scaleItem = $scale.selectAll('.scale__item');
+const $spacer = $nav.select('.spacer');
 
 const VERSION = Date.now();
 const RESULTS_URL = `https://pudding.cool/2019/09/digital-laugh-data/data.json?version=${VERSION}`;
 const SLIDER_MIN = 1;
 const SLIDER_MAX = 5;
 const SLIDER_STEP = 0.05;
+
+const mt = new MoveTo();
 
 let resultsData = [];
 let chart = null;
@@ -58,10 +62,16 @@ function moveButton(el) {
 }
 
 function handleSubmitClick() {
-  $submitButton.classed('is-hidden', true);
+  $submitButton.classed('is-disabled', true);
   const term = $submitButton.attr('data-term');
   chart.reveal(term);
   $figure.classed('is-visible', true);
+
+  $terms.select(`[data-term='${term}']`).classed('is-complete', true);
+
+  // TODO scroll down to chart
+  mt.move($spacer.node());
+  // TODO all submitted
 }
 
 function handleAnotherClick() {
@@ -135,10 +145,6 @@ function setupSlider() {
     connect: true,
     step: SLIDER_STEP,
     range: { min: SLIDER_MIN, max: SLIDER_MAX },
-    // pips: {
-    // 	mode: 'steps',
-    // 	density: 10
-    // }
   });
 
   s.on('change', handleSliderChange);

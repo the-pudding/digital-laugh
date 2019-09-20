@@ -65,8 +65,8 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
       // called once at start
       init() {
         $axis = $sel.append('div').attr('class', 'axis');
-        $axis.append('p').html('&larr; Less Funny');
-        $axis.append('p').html('More Funny &rarr;');
+        $axis.append('p').html('&lt; Less Funny');
+        $axis.append('p').html('More Funny &gt;');
 
         $svg = $sel.append('svg').attr('class', 'pudding-chart');
 
@@ -160,7 +160,7 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
         $sorted
           .transition()
           .duration(750)
-          .delay((d, i) => ($sorted.size() - i) * 250)
+          // .delay((d, i) => ($sorted.size() - i) * 250)
           .ease(d3.easeCubicInOut)
           .attr(
             'transform',
