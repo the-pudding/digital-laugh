@@ -95,14 +95,14 @@
 
 
 	.survey__slider
-		max-width $column-width * 0.925
+		max-width $perception-width * 0.925
 		margin 0 auto
 		&.is-disabled
-			opacity 0.5
+			opacity 0.33
 		&.noUi-horizontal.is-disabled
 			cursor not-allowed
-		.noUi-handle.is-disabled
-			cursor not-allowed
+			.noUi-handle
+				cursor not-allowed
 
 		&.noUi-target
 			box-shadow none
@@ -134,11 +134,11 @@
 
 	.survey__scale
 		&.is-disabled
-			opacity 0.5
+			opacity 0.33
 
 		ul
 			margin 1rem auto
-			max-width $column-width
+			max-width $perception-width
 			display flex
 			justify-content space-between
 			align-items flex-start
@@ -184,6 +184,9 @@
 		button
 			margin 0
 			margin-bottom 0.5em
+			&.is-disabled
+				opacity 0.33
+				cursor not-allowed
 
 		.btn--submit
 			text-transform uppercase
@@ -192,6 +195,8 @@
 			padding 0.5em 2em
 			visibility visible
 			&.is-hidden
+				visibility hidden
+			&.is-invisible
 				visibility hidden
 		
 		.btn--skip, .btn--another
@@ -202,8 +207,10 @@
 				background-color $secondary
 			&.is-hidden
 				display none
+			&.is-invisible
+				visibility hidden
 		
-		.btn--another
+		.btn--skip
 			font-weight 400
 
 	
@@ -239,12 +246,14 @@
 		padding-top 1rem
 		p
 			margin 0
-			padding 0 1rem
+			padding 0 2rem
 			set-type-size(small, false)
 			line-height 1
 			color $fg
-			text-align center
+			// text-align center
 			width 50%
+			&:last-of-type
+				text-align right
 
 @keyframes waddle
 	0%

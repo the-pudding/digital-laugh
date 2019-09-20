@@ -1,3 +1,5 @@
+/* global d3 */
+import uniq from 'lodash.uniqby';
 import generateID from '../generate-id';
 
 /*
@@ -13,6 +15,7 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
   function createChart(el) {
     const $sel = d3.select(el);
     let data = $sel.datum() || [];
+    let revealed = [];
     // dimension stuff
     const MAX_HEIGHT = 96;
     const OFFSET = 0.67;
@@ -25,7 +28,7 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
     const marginRight = 32;
     let width = 0;
     let height = 0;
-    let term = null;
+    let term = 'tbd';
 
     // scales
     const scaleX = d3.scaleLinear();
@@ -50,6 +53,12 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
         .append('linearGradient')
         .attr('id', gradientID)
         .attr('gradientUnits', 'userSpaceOnUse');
+    }
+
+    function getSortVal(key) {
+      if (key === term) return 0;
+      if (revealed.includes(key)) return 1;
+      return 2;
     }
 
     const Chart = {
@@ -142,29 +151,48 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
             return $t;
           });
 
-        $term.attr(
-          'transform',
-          (d, i) => `translate(0, ${i * MAX_HEIGHT * OFFSET})`
-        );
+        const $sorted = $term.sort((a, b) => {
+          const aV = getSortVal(a.key);
+          const bV = getSortVal(b.key);
+          return d3.ascending(aV, bV);
+        });
 
-        $term
+        $sorted
+          .transition()
+          .duration(750)
+          .delay((d, i) => ($sorted.size() - i) * 250)
+          .ease(d3.easeCubicInOut)
+          .attr(
+            'transform',
+            (d, i) => `translate(0, ${i * MAX_HEIGHT * OFFSET})`
+          )
+          .style('opacity', d => {
+            if (term) {
+              if (d.key === term) return 1;
+              if (revealed.includes(d.key)) return 0.5;
+              return 0;
+            }
+            return 1;
+          });
+
+        $sorted
           .select('.path--area')
           .datum(d => d.histogram)
           .attr('d', generateArea)
           .style('fill', `url(#${gradientID})`);
 
-        $term
+        $sorted
           .select('.path--line')
           .datum(d => d.histogram)
           .attr('d', generateLine);
 
-        $term
+        $sorted
           .select('.baseline')
           .attr('x2', scaleX.range()[1])
           .attr('y1', scaleY.range()[0])
           .attr('y2', scaleY.range()[0]);
 
-        $term
+        $sorted
           .select('text')
           .text(d => d.key)
           .attr('y', scaleY.range()[0] + 8);
@@ -180,9 +208,17 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
         Chart.render();
         return Chart;
       },
-      highlight(val) {
+      reveal(val) {
         if (!arguments.length) return term;
         term = val;
+        revealed.push(val);
+        Chart.resize();
+        Chart.render();
+        return Chart;
+      },
+      all(terms) {
+        term = null;
+        revealed = uniq(revealed.concat(terms));
         Chart.resize();
         Chart.render();
         return Chart;

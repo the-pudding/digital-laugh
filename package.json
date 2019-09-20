@@ -11,6 +11,7 @@
 		"@firebase/app": "0.4.16",
 		"@firebase/database": "0.5.3",
 		"lodash.debounce": "4.0.8",
+		"lodash.uniqby": "4.7.0",
 		"nouislider": "14.0.2",
 		"superagent": "5.1.0"
 	},

@@ -6,8 +6,6 @@ import './pudding-chart/ridgeline';
 const $section = d3.select('#perception');
 const $survey = $section.select('.section__survey');
 const $instructions = $survey.select('.survey__instructions');
-// const $instructions1 = $instructions.select('.instructions--1');
-// const $instructions2 = $instructions.select('.instructions--2');
 const $terms = $survey.select('.survey__terms');
 const $termLi = $terms.selectAll('.survey__terms li');
 const $slider = $survey.select('.survey__slider');
@@ -16,8 +14,8 @@ const $figure = $survey.select('.survey__figure');
 const $nav = $survey.select('.survey__nav');
 
 const $submitButton = $nav.select('.btn--submit');
-const $skipButton = $nav.select('.btn--skip');
 const $anotherButton = $nav.select('.btn--another');
+const $skipButton = $nav.select('.btn--skip');
 const $scaleItem = $scale.selectAll('.scale__item');
 
 const VERSION = Date.now();
@@ -62,7 +60,33 @@ function moveButton(el) {
 function handleSubmitClick() {
   $submitButton.classed('is-hidden', true);
   const term = $submitButton.attr('data-term');
-  chart.highlight(term);
+  chart.reveal(term);
+  $figure.classed('is-visible', true);
+}
+
+function handleAnotherClick() {
+  $termLi
+    .style('transform', 'scale(1)')
+    .style('top', 0)
+    .style('left', 0)
+    .classed('is-active', false)
+    .classed('is-hidden', false);
+
+  $slider.classed('is-disabled', true).attr('disabled', 'disabled');
+  $scale.classed('is-disabled', true);
+  $instructions.classed('is-answering', false);
+  $submitButton.classed('is-hidden', true);
+
+  // TODO reset slider
+}
+
+function handleSkipClick() {
+  const terms = [];
+  $termLi.each((d, i, n) => {
+    terms.push(d3.select(n[i]).text());
+  });
+  chart.all(terms);
+  $skipButton.classed('is-invisible', true);
   $figure.classed('is-visible', true);
 }
 
@@ -71,13 +95,16 @@ function handleTermClick() {
   const $li = d3.select(el);
   const $btn = $li.select('button');
   const term = $btn.text();
-  $termLi.classed('is-active', false);
-  $termLi.classed('is-hidden', true);
+
+  $termLi.classed('is-active', false).classed('is-hidden', true);
   $slider.classed('is-disabled', false).attr('disabled', null);
   $scale.classed('is-disabled', false);
   $instructions.classed('is-answering', true);
-  $submitButton.classed('is-hidden', false).attr('data-term', term);
-  $figure.classed('is-visible', false);
+  $submitButton
+    .classed('is-disabled', false)
+    .classed('is-hidden', false)
+    .attr('data-term', term);
+  $anotherButton.classed('is-disabled', false);
 
   moveButton(el);
 }
@@ -122,6 +149,12 @@ function setupTermButtons() {
   $termLi.select('button').on('click', handleTermClick);
 }
 
+function setupNavButtons() {
+  $submitButton.on('click', handleSubmitClick);
+  $anotherButton.on('click', handleAnotherClick);
+  $skipButton.on('click', handleSkipClick);
+}
+
 function setupDB() {
   db.setup();
   const returner = db.getReturner();
@@ -135,8 +168,6 @@ function setupDB() {
 function setupResults() {
   // create the charts
   chart = $figure.puddingChartRidgeline();
-
-  $submitButton.on('click', handleSubmitClick);
 
   d3.json(RESULTS_URL)
     .then(raw => {
@@ -155,6 +186,7 @@ function init() {
   setupScale();
   setupSlider();
   setupTermButtons();
+  setupNavButtons();
   setupDB();
   setupResults();
 }
