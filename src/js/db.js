@@ -101,7 +101,7 @@ function getSubmissions(data) {
   Object.keys(data).forEach(d => {
     const g = data[d];
     // add to submit list
-    output[d] = g;
+    if (g.store) output[d] = g;
   });
   return output;
 }
@@ -109,8 +109,9 @@ function getSubmissions(data) {
 function update({ key, min, max }) {
   userData.answers[key] = {
     key,
-    min: formatDecimal(min),
-    max: formatDecimal(max),
+    min: min ? formatDecimal(min) : '1.00',
+    max: max ? formatDecimal(max) : '5.00',
+    store: min && max,
   };
   if (hasStorage)
     window.localStorage.setItem(
