@@ -30,6 +30,9 @@ const mt = new MoveTo();
 
 let resultsData = [];
 let chart = null;
+let slider = null;
+let min = null;
+let max = null;
 
 function resize() {}
 
@@ -69,8 +72,8 @@ function handleSubmitClick() {
 
   $terms.select(`[data-term='${term}']`).classed('is-complete', true);
 
-  // TODO scroll down to chart
   mt.move($spacer.node());
+  db.update({ key: term, min, max });
   // TODO all submitted
 }
 
@@ -87,7 +90,10 @@ function handleAnotherClick() {
   $instructions.classed('is-answering', false);
   $submitButton.classed('is-hidden', true);
 
-  // TODO reset slider
+  slider.set([1, 5]);
+  $scaleItem.classed('is-active', false);
+
+  mt.move($survey.node());
 }
 
 function handleSkipClick() {
@@ -98,6 +104,8 @@ function handleSkipClick() {
   chart.all(terms);
   $skipButton.classed('is-invisible', true);
   $figure.classed('is-visible', true);
+
+  mt.move($spacer.node());
 }
 
 function handleTermClick() {
@@ -116,17 +124,15 @@ function handleTermClick() {
     .attr('data-term', term);
   $anotherButton.classed('is-disabled', false);
 
+  min = null;
+  max = null;
+  mt.move($survey.node());
   moveButton(el);
 }
 
-function handleSliderChange([a, b]) {
-  const min = +a;
-  const max = +b;
-}
-
-function handleSliderSlide([a, b]) {
-  const min = Math.round(+a);
-  const max = Math.round(+b);
+function handleSlider([a, b]) {
+  min = Math.round(+a);
+  max = Math.round(+b);
   $scaleItem.classed('is-active', d => d >= min && d <= max);
 }
 
@@ -140,15 +146,15 @@ function setupSlider() {
   $slider.attr('disabled', true).classed('is-disabled', true);
   $scale.classed('is-disabled', true);
 
-  const s = noUiSlider.create($slider.node(), {
+  slider = noUiSlider.create($slider.node(), {
     start: [SLIDER_MIN, SLIDER_MAX],
     connect: true,
     step: SLIDER_STEP,
     range: { min: SLIDER_MIN, max: SLIDER_MAX },
   });
 
-  s.on('change', handleSliderChange);
-  s.on('slide', handleSliderSlide);
+  slider.on('set', handleSlider);
+  slider.on('slide', handleSlider);
 }
 
 function setupTermButtons() {
@@ -166,7 +172,7 @@ function setupDB() {
   const returner = db.getReturner();
   console.log({ returner });
 
-  db.update({ key: 'ha', min: '4.05', max: '4.75' });
+  // db.update({ key: 'ha', min: '4.05', max: '4.75' });
   // db.setReturner();
   // db.finish();
 }

@@ -6,9 +6,11 @@
 		max-width $column-width
 		margin 0 auto
 		font-family $mono
-		font-size 128px
+		font-size 64px
 		line-height 1
 		font-weight 700
+		+mq('bp-4')
+			font-size 128px
 		span
 			// display block
 			color $white
@@ -32,6 +34,7 @@
 		// 	margin-right 0.5em
 
 	&__top
+		position relative
 		padding 6rem 0
 		// background-color $secondary
 		// clip-path polygon(0 0, 100% 0, 100% 80%, 0 100%)

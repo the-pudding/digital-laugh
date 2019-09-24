@@ -2,7 +2,7 @@
 	.survey__instructions
 		max-width $column-width
 		margin 0 auto
-		margin-top 2rem
+		padding-top 2rem
 		p
 			margin 0
 	
@@ -42,11 +42,14 @@
 
 		li
 			position relative
-			// transition opacity 500ms ease-in-out
+
+			&.is-complete
+				pointer-events none
+				opacity 0.33
+
 			&.is-hidden
 				opacity 0
-				button
-					pointer-events none
+				pointer-events none
 
 			&.is-active
 				opacity 1
@@ -57,10 +60,6 @@
 					color $white
 					&:before
 						background linear-gradient(to bottom, $primary 0%, $primary 100%)
-
-			&.is-complete
-				pointer-events none
-				opacity 0.33
 
 		button
 			position relative
@@ -149,6 +148,7 @@
 			color darken($bg, 35)
 			text-align center
 			font-family $mono
+			user-select none
 			svg
 				opacity 0.33
 			&:nth-of-type(4) svg
