@@ -23,11 +23,10 @@
 	<main id='content'>
 
 		{{> story/intro }}
-		{{> story/perception }}
-		{{> story/evolution }}
+		{{#each doc.parts}}
+			{{> story/part }}
+		{{/each}}
 		{{> story/outro }}
-
-
 	</main>
 
 	{{!-- {{> base/footer }} --}}

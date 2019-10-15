@@ -4,15 +4,15 @@ import MoveTo from 'moveto';
 import db from './db';
 import './pudding-chart/ridgeline';
 
-const $section = d3.select('#perception');
-const $survey = $section.select('.section__survey');
-const $instructions = $survey.select('.survey__instructions');
-const $terms = $survey.select('.survey__terms');
-const $termLi = $terms.selectAll('.survey__terms li');
-const $slider = $survey.select('.survey__slider');
-const $scale = $survey.select('.survey__scale');
-const $figure = $survey.select('.survey__figure');
-const $nav = $survey.select('.survey__nav');
+const $section = d3.select('#rank');
+const $content = $section.select('.section__content');
+const $instructions = $content.select('.content__instructions');
+const $terms = $content.select('.content__terms');
+const $termLi = $terms.selectAll('.content__terms li');
+const $slider = $content.select('.content__slider');
+const $scale = $content.select('.content__scale');
+const $figure = $content.select('.content__figure');
+const $nav = $content.select('.content__nav');
 
 const $submitButton = $nav.select('.btn--submit');
 const $anotherButton = $nav.select('.btn--another');
@@ -34,7 +34,10 @@ let slider = null;
 let min = null;
 let max = null;
 
-function resize() {}
+function resize() {
+  if ($content.size()) {
+  }
+}
 
 function moveButton(el) {
   const $li = d3.select(el);
@@ -93,7 +96,7 @@ function handleAnotherClick() {
   slider.set([1, 5]);
   $scaleItem.classed('is-active', false);
 
-  mt.move($survey.node());
+  mt.move($content.node());
 }
 
 function handleSkipClick() {
@@ -126,7 +129,7 @@ function handleTermClick() {
 
   min = null;
   max = null;
-  mt.move($survey.node());
+  mt.move($content.node());
   moveButton(el);
 }
 
@@ -195,12 +198,14 @@ function setupResults() {
 }
 
 function init() {
-  setupScale();
-  setupSlider();
-  setupTermButtons();
-  setupNavButtons();
-  setupDB();
-  setupResults();
+  if ($content.size()) {
+    setupScale();
+    setupSlider();
+    setupTermButtons();
+    setupNavButtons();
+    setupDB();
+    setupResults();
+  }
 }
 
 export default { init, resize };

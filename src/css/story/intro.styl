@@ -3,57 +3,74 @@
 	padding 0 1rem
 
 	&__hed
-		max-width $column-width
 		margin 0 auto
-		font-family $mono
-		font-size 64px
-		line-height 1
+		max-width $column-width
 		font-weight 700
+		font-size 64px
+		font-family $mono
+		line-height 1
+
 		+mq('bp-4')
 			font-size 128px
+
 		span
 			// display block
-			color $white
+			// color $white
 
-		
 	&__dek
-		max-width $column-width
 		margin 0 auto
 		margin-top 1rem
+		max-width $column-width
 		text-align center
 		set-type-size(large, false)
-		
+
 	&__byline
-		max-width $column-width
 		margin 0 auto
-		set-type-size(small)
-		font-family $mono
-		font-weight 700
 		margin-bottom 3rem
+		max-width $column-width
+		font-weight 700
+		font-family $mono
+		set-type-size(small)
 		// a
-		// 	margin-right 0.5em
+		// margin-right 0.5em
 
 	&__top
 		position relative
 		padding 6rem 0
 		// background-color $secondary
 		// clip-path polygon(0 0, 100% 0, 100% 80%, 0 100%)
-	
-	// &__bottom
-	// 	padding-top 3rem
 
+	// &__bottom
+	// padding-top 3rem
 	&__prelude
-		max-width $column-width
 		margin 0 auto
+		max-width $column-width
 		// padding 0
-	
+
 	&__images
-		margin-top 2rem
 		display flex
 		justify-content center
+		margin-top 2rem
+
 		img
 			width 10rem
+
 			&:first-child
 				margin-right 10rem
+
 			&:last-child
 				margin-left 2rem
+
+	&__parts
+		ul
+			display flex
+			flex-wrap wrap
+			margin 0 auto
+			max-width 40rem
+
+		li
+			display flex
+			flex-direction column
+			width 25%
+			text-align center
+			set-type-size(small)

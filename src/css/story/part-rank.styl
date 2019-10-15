@@ -1,164 +1,180 @@
-#perception
-	.survey__instructions
-		max-width $column-width
+#rank
+	.content__instructions
 		margin 0 auto
 		padding-top 2rem
+		max-width $column-width
+
 		p
 			margin 0
-	
+
 		p:first-of-type
 			display block
+
 		p:last-of-type
 			display none
 			color $primary
-		
+
 		&.is-answering
 			p:first-of-type
 				display none
+
 			p:last-of-type
 				display block
 
 		.instructions
 			set-type-size(medium, true)
-			font-family $mono
-			font-weight 700
 			text-align center
-		
+			font-weight 700
+			font-family $mono
 
-	.survey__figure
-		max-width $column-width
+	.content__figure
 		margin 0 auto
+		max-width $column-width
 		opacity 0
+
 		&.is-visible
 			opacity 1
 
-	.survey__terms
+	.content__terms
+		position relative
+		display flex
+		flex-wrap wrap
 		margin 0 auto
 		padding 2rem 0
 		max-width 50rem
-		display flex
-		flex-wrap wrap
-		position relative
 
 		li
 			position relative
 
 			&.is-complete
-				pointer-events none
 				opacity 0.33
+				pointer-events none
 
 			&.is-hidden
 				opacity 0
 				pointer-events none
 
 			&.is-active
-				opacity 1
 				position absolute
+				opacity 1
 				pointer-events none
+
 				button
 					background-color $primary
 					color $white
+
 					&:before
 						background linear-gradient(to bottom, $primary 0%, $primary 100%)
 
 		button
 			position relative
 			text-transform none
+
 			&:before
-				content ''
 				position absolute
-				z-index 0
-				bottom 0
 				right -8px
-				height 8px
+				bottom 0
+				z-index 0
 				width 16px
+				height 8px
+				border-bottom-left-radius 8px
 				background linear-gradient(to bottom, $white 0%, $white 100%)
 				background-attachment fixed
-				border-bottom-left-radius 8px
-			
-			&:after
 				content ''
+
+			&:after
 				position absolute
-				z-index 1
-				bottom 0
 				right -10px
+				bottom 0
+				z-index 1
 				width 12px
 				height 8px
-				background $bg
 				border-bottom-left-radius 8px
+				background $bg
+				content ''
 
 			&:hover
 				background-color $secondary
+
 				&:before
 					background linear-gradient(to bottom, $secondary 0%, $secondary 100%)
 
-
-	.survey__slider
-		max-width $perception-width * 0.925
+	.content__slider
 		margin 0 auto
+		max-width $perception-width * 0.925
+
 		&.is-disabled
 			opacity 0.33
+
 		&.noUi-horizontal.is-disabled
 			cursor not-allowed
+
 			.noUi-handle
 				cursor not-allowed
 
 		&.noUi-target
-			box-shadow none
-			border-color $fg
 			border-width 0
+			border-color $fg
 			border-radius 4px
 			background-color rgba($fg, 0.25)
-		
+			box-shadow none
+
 		&.noUi-horizontal
-			cursor pointer
 			height 8px
+			cursor pointer
 
 		.noUi-connect
 			background-color $secondary
 
 		.noUi-handle
-			cursor pointer
-			border-color $fg
-			border-width 3px
-			border-radius 50%
+			top -12px
 			width 32px
 			height 32px
-			top -12px
+			border-width 3px
+			border-color $fg
+			border-radius 50%
 			background-color $white
+			cursor pointer
+
 			&:before
 				display none
+
 			&:after
 				display none
 
-	.survey__scale
+	.content__scale
 		&.is-disabled
 			opacity 0.33
 
 		ul
-			margin 1rem auto
-			max-width $perception-width
 			display flex
 			justify-content space-between
 			align-items flex-start
-		
+			margin 1rem auto
+			max-width $perception-width
+
 		li
-			width 20%
 			padding 0 0.5rem
+			width 20%
 			color darken($bg, 35)
 			text-align center
 			font-family $mono
 			user-select none
+
 			svg
 				opacity 0.33
+
 			&:nth-of-type(4) svg
 				transform-origin 50% 100%
-				animation waddle 2000ms ease-in-out alternate infinite 
+				animation waddle 2000ms ease-in-out alternate infinite
+
 			&:last-of-type svg
 				transform-origin 50% 100%
-				animation roll 750ms ease-in-out alternate infinite 
+				animation roll 750ms ease-in-out alternate infinite
+
 			&.is-active
 				color $fg
+
 				svg
 					opacity 1
 
@@ -167,17 +183,16 @@
 			margin-top 0.5rem
 			set-type-size(x-small, false)
 			line-height 1.35
-		
 
-	.survey__nav
-		padding 1rem 0
-		max-width $column-width
-		margin 0 auto
+	.content__nav
 		display flex
 		flex-direction column
-		align-items center
 		justify-content center
-	
+		align-items center
+		margin 0 auto
+		padding 1rem 0
+		max-width $column-width
+
 		&.is-hidden
 			visibility hidden
 
@@ -187,6 +202,7 @@
 		button
 			margin 0
 			margin-bottom 0.5em
+
 			&.is-disabled
 				opacity 0.33
 				cursor not-allowed
@@ -194,38 +210,42 @@
 		.btn--submit
 			text-transform uppercase
 			set-type-size(x-large, false)
-			border-radius 32px
-			padding 0.5em 2em
 			visibility visible
+			padding 0.5em 2em
+			border-radius 32px
+
 			&.is-hidden
 				visibility hidden
+
 			&.is-invisible
 				visibility hidden
-		
+
 		.btn--skip, .btn--another
 			background-color transparent
 			set-type-size(small, false)
 			text-transform none
+
 			&:hover
 				background-color $secondary
+
 			&.is-hidden
 				display none
+
 			&.is-invisible
 				visibility hidden
-		
+
 		.btn--skip
 			font-weight 400
 
-	
 	.pudding-chart
 		display block
 		font-family $mono
-		
+
 		.term .path--area
 			stroke none
 			fill-opacity 0.75
 			// fill $primary
-		
+
 		.term .path--line
 			stroke $bg
 			stroke-width 2px
@@ -234,44 +254,50 @@
 		.term .baseline
 			stroke-width 2px
 			stroke $fg
-		
+
 		text
 			fill $fg
 			set-type-size(root, false)
 			font-weight 700
 
-		
 	figure .axis
 		display flex
-		font-family $mono
 		justify-content space-between
 		// background-color $green-dark
 		padding-top 1rem
+		font-family $mono
+
 		p
 			margin 0
 			padding 0 2rem
 			set-type-size(small, false)
-			line-height 1
-			color $fg
 			// text-align center
 			width 50%
+			color $fg
+			line-height 1
+
 			&:last-of-type
 				text-align right
 
 @keyframes waddle
 	0%
 		transform rotate(0)
+
 	75%
 		transform rotate(-1deg)
+
 	85%
 		transform rotate(1deg)
+
 	95%
 		transform rotate(-1deg)
+
 	100%
 		transform rotate(1deg)
 
 @keyframes roll
 	0%
 		transform rotate(-5deg)
+
 	100%
 		transform rotate(5deg)

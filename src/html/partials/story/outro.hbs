@@ -1,4 +1,17 @@
 <section id='outro'>
+	<ul class='outro__tease'>
+		{{#each doc.parts}}
+			{{#if live}}
+			{{else}}
+				<li>
+					<span>Part {{index}}</span>
+					<span>{{{title}}}</span>
+					<span>{{{release}}}</span>
+				</li>
+			{{/if}}
+		{{/each}}
+	</ul>
+
 	<div class='prose notes'>
 		{{#each doc.notes}}
 		<p>{{{value}}}</p>

@@ -1,0 +1,29 @@
+<div class='content__instructions'>
+	<p class='instructions instructions--1'>{{{instructions1}}}</p>
+	<p class='instructions instructions--2 is-hidden'>{{{instructions2}}}</p>
+</div>
+
+<ul class='content__terms'>
+	{{#each terms}}
+		<li data-term='{{this}}'><button class='btn'>{{this}}</button></li>
+	{{/each}}
+</ul>
+
+<div class='content__slider slider'></div>
+
+<div class='content__scale'>
+	<ul>
+		{{#each scale}}
+			<li class='scale__item'><img inline src='scale/{{value}}.svg'><span>{{{text}}}</span></li>
+		{{/each}}
+	</ul>
+</div>
+
+<div class='content__nav'>
+	<button class='btn btn--border btn--submit is-disabled'>{{{submit}}}</button>
+	<div class='spacer'></div>
+	<button class='btn btn--another is-disabled'>{{{another}}}</button>
+	<button class='btn btn--skip'>{{{skip}}}</button>
+</div>
+
+<figure class='content__figure'></figure>

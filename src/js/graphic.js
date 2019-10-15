@@ -1,10 +1,21 @@
 /* global d3 */
-import Perception from './graphic-perception'
+import Share from './part-share';
+import Lol from './part-lol';
+import Rank from './part-rank';
+import Review from './part-review';
 
-function resize() {}
+function resize() {
+  Share.resize();
+  Lol.resize();
+  Rank.resize();
+  Review.resize();
+}
 
 function init() {
-  Perception.init();
+  Share.init();
+  Lol.init();
+  Rank.init();
+  Review.init();
 }
 
 export default { init, resize };

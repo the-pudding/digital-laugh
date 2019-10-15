@@ -15,6 +15,18 @@
 		</p>
 	</div>
 
+	<div class='intro__parts'>
+		<ul>
+			{{#each doc.parts}}
+			<li>
+				<span>Part {{index}}</span>
+				<span>{{{title}}}</span>
+				<span>{{{release}}}</span>
+			</li>
+			{{/each}}
+		</ul>
+	</div>
+
 	<div class='intro__prelude prose'>
 		{{#each doc.intro}}
 		<p>{{{value}}}</p>
