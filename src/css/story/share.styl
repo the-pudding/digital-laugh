@@ -1,0 +1,38 @@
+#share
+	figure
+		margin 4rem auto
+		max-width 60rem
+		height 200vh
+
+		ul
+			display flex
+			display block
+			flex-direction column
+			margin 2rem 0
+			height 100%
+
+		li
+			display flex
+			margin-bottom 1px
+			// min-height 1px
+
+		p
+			position relative
+			margin 0
+
+		span
+			position absolute
+			top 0
+			left 0.5em
+			display block
+			color $white
+			set-type-size(x-small, false)
+
+		.upper
+			background-color $gray
+
+			span
+				display none
+
+		.lower
+			background-color $gray-dark
