@@ -1,14 +1,17 @@
 /* global d3 */
 
+import * as noUiSlider from 'nouislider';
 import loadData from './load-data';
+import puddingChartTreeMap from './pudding-chart/treemap';
 import puddingChartVarWidth from './pudding-chart/varwidth';
 
 const REM = 16;
 const MIN_SHARE = 0.0001;
-const MIN_VIS = 0.002;
 let shareData = [];
 let nestedData = [];
-let chart = null;
+let chartLower = null;
+let chartCase = null;
+let slider = null;
 
 const $section = d3.select('#share');
 const $content = $section.select('.section__content');
@@ -16,12 +19,26 @@ const $chartLower = $content.select('.chart-lower');
 const $chartCase = $content.select('.chart-case');
 const $figureLower = $chartLower.select('figure');
 const $figureCase = $chartCase.select('figure');
+const $slider = $chartCase.select('.slider');
+
+function handleSlider([a]) {
+  console.log(a);
+  // min = Math.round(+a);
+  // max = Math.round(+b);
+  // $scaleItem.classed('is-active', d => d >= min && d <= max);
+}
 
 function updateFigureDimensions() {
   const m = REM * 2;
   const o = $chartCase.select('.case__header').node().offsetHeight;
   const h = window.innerHeight - o - m;
   $figureCase.style('height', `${h}px`);
+
+  const w = $figureLower.node().offsetWidth;
+  const h2 = window.innerHeight * 0.9;
+  const sz = Math.min(w, h2);
+
+  $figureLower.style('width', `${sz}px`).style('height', `${sz}px`);
 }
 
 function resize() {
@@ -64,25 +81,25 @@ function setupCase(data) {
     .map(d => d.value)
     .filter(d => d.sumShare >= MIN_SHARE);
 
-  chart = $figureCase.datum(nestedData).puddingChartVarWidth();
+  chartCase = $figureCase.datum(nestedData).puddingChartVarWidth();
 
   // console.table(nestedData);
   setTimeout(() => {
-    chart
+    chartCase
       .data(nestedData.filter(d => d.sumShare <= 0.1))
       .resize()
       .render();
   }, 4000);
 
   setTimeout(() => {
-    chart
+    chartCase
       .data(nestedData.filter(d => d.sumShare <= 0.005))
       .resize()
       .render();
   }, 8000);
 
   setTimeout(() => {
-    chart
+    chartCase
       .data(nestedData.filter(d => d.sumShare <= 0.001))
       .resize()
       .render();
@@ -107,105 +124,28 @@ function setupLower(data) {
       children: d.values,
     }));
 
-  const treeData = { name: 'all', children: nested };
-
-  const tile = 'treemapBinary';
-
-  const margin = 16;
-  const size = 960 - margin * 2;
-  const treemap = d3
-    .treemap()
-    .tile(d3[tile])
-    .size([size, size])
-    .padding(0)
-    .round(true);
-
-  const hiearchy = d3
-    .hierarchy(treeData)
-    .sum(d => d.count)
-    .sort((a, b) => b.count - a.count);
-
-  const root = treemap(hiearchy);
-
   const extent = d3.extent(clean, d => d.share);
-  const font = d3
-    .scalePow()
-    .exponent(0.5)
-    .domain(extent)
-    .range([12, 64]);
 
-  const $svg = $figureLower.append('svg');
+  const treeData = { name: 'all', children: nested, extent };
+  chartLower = $figureLower.datum(treeData).puddingChartTreeMap();
+}
 
-  const $g = $svg.append('g');
+function setupSlider() {
+  slider = noUiSlider.create($slider.node(), {
+    start: [0],
+    connect: false,
+    step: 1,
+    range: { min: 0, max: 4 },
+  });
 
-  $g.attr('transform', `translate(${margin}, ${margin})`);
-
-  $svg
-    .style('width', `${size + margin * 2}px`)
-    .style('height', `${size + margin * 2}px`);
-
-  const $leaf = $g
-    .selectAll('g')
-    .data(root.leaves())
-    .join('g')
-    .attr('transform', d => `translate(${d.x0},${d.y0})`)
-    .attr('class', d => `leaf leaf--${d.data.family}`);
-
-  $leaf
-    .append('rect')
-    .attr('width', d => d.x1 - d.x0)
-    .attr('height', d => d.y1 - d.y0);
-
-  $leaf
-    .append('text')
-    .attr('class', 'text-id text-id--bg')
-    .text(d => d.data.id)
-    .style('font-size', d => font(d.data.share))
-    .attr('text-anchor', 'middle')
-    .attr('alignment-baseline', 'middle')
-    .attr('x', d => (d.x1 - d.x0) / 2)
-    .attr('y', d => (d.y1 - d.y0) / 2)
-    .style('opacity', d => (d.data.share < MIN_VIS ? 0 : 1));
-
-  $leaf
-    .append('text')
-    .attr('class', 'text-id text-id--fg')
-    .text(d => d.data.id)
-    .style('font-size', d => font(d.data.share))
-    .attr('text-anchor', 'middle')
-    .attr('alignment-baseline', 'middle')
-    .attr('x', d => (d.x1 - d.x0) / 2)
-    .attr('y', d => (d.y1 - d.y0) / 2)
-    .style('opacity', d => (d.data.share < MIN_VIS ? 0 : 1));
-
-  $leaf
-    .append('text')
-    .attr('class', 'text-share')
-    .text(d => d3.format('.1%')(d.data.share))
-    .style('font-size', '12px')
-    .attr('text-anchor', 'middle')
-    .attr('alignment-baseline', 'middle')
-    .attr('x', d => (d.x1 - d.x0) / 2)
-    .attr('y', d => (d.y1 - d.y0) / 2 + font(d.data.share))
-    .style('opacity', d => (d.data.share < MIN_VIS ? 0 : 1));
-
-  $leaf
-    .append('text')
-    .attr('class', 'text-count')
-    .text(d => d3.format(',')(d.data.count))
-    .style('font-size', '12px')
-    .attr('text-anchor', 'middle')
-    .attr('alignment-baseline', 'middle')
-    .attr('x', d => (d.x1 - d.x0) / 2)
-    .attr('y', d => (d.y1 - d.y0) / 2 + font(d.data.share) + 16)
-    .style('opacity', d => (d.data.share < 0.1 ? 0 : 1));
-
-  // console.table(clean);
+  slider.on('set', handleSlider);
+  slider.on('slide', handleSlider);
 }
 
 function setup([all, lower]) {
   setupLower(lower);
   setupCase(all);
+  setupSlider();
 }
 
 function init() {

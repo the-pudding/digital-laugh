@@ -13,14 +13,16 @@
 	.text-id--bg
 		fill none
 		stroke $fg
-		stroke-width 5px
+		stroke-width 4px
 
 	.text-id--fg
 		// stroke none
 		fill $fg
 
 	rect
+		stroke-width 4px
 		stroke-width 2px
+		stroke $fg
 		// stroke $fg
 
 	.leaf--lol
@@ -50,7 +52,7 @@
 	.leaf--other
 		rect
 			fill $purple
-			stroke darken($purple, 20)
+			stroke darken($purple, 10)
 
 		.text-id--bg
 			stroke darken($purple, 0)
@@ -58,7 +60,7 @@
 	.leaf--text
 		rect
 			fill $grey
-			stroke darken($grey, 15)
+			stroke darken($grey, 20)
 
 		.text-id--fg
 			stroke darken($grey, 0)
@@ -146,8 +148,8 @@
 		.upper
 			background repeating-linear-gradient(
 				45deg,
-				$bg,
-				$bg 4px,
+				transparent,
+				transparent 4px,
 				$fg 4px,
 				$fg 8px
 			)
@@ -168,29 +170,11 @@
 				border-right 4px solid $fg
 				background-color $yellow
 
-			.upper
-				background repeating-linear-gradient(
-					45deg,
-					$yellow,
-					$yellow 4px,
-					$fg 4px,
-					$fg 8px
-				)
-
 		&.family--ha
 			// border-color darken($green, 20)
 			.lower
 				border-right 4px solid $fg
 				background-color $green
-
-			.upper
-				background repeating-linear-gradient(
-					45deg,
-					$green,
-					$green 4px,
-					$fg 4px,
-					$fg 8px
-				)
 
 		&.family--acronym
 			// border-color darken($red, 20)
@@ -198,41 +182,14 @@
 				border-right 4px solid $fg
 				background-color $red
 
-			.upper
-				background repeating-linear-gradient(
-					45deg,
-					$red,
-					$red 4px,
-					$fg 4px,
-					$fg 8px
-				)
-
 		&.family--other
 			// border-color darken($purple, 20)
 			.lower
 				border-right 4px solid $fg
 				background-color $purple
 
-			.upper
-				background repeating-linear-gradient(
-					45deg,
-					$purple,
-					$purple 4px,
-					$fg 4px,
-					$fg 8px
-				)
-
 		&.family--text
 			// border-color lighten($grey, 30)
 			.lower
 				border-right 4px solid $fg
 				background-color $grey
-
-			.upper
-				background repeating-linear-gradient(
-					45deg,
-					$grey,
-					$grey 4px,
-					$fg 4px,
-					$fg 8px
-				)

@@ -99,49 +99,6 @@
 				&:before
 					background linear-gradient(to bottom, $secondary 0%, $secondary 100%)
 
-	.content__slider
-		margin 0 auto
-		max-width $perception-width * 0.925
-
-		&.is-disabled
-			opacity 0.33
-
-		&.noUi-horizontal.is-disabled
-			cursor not-allowed
-
-			.noUi-handle
-				cursor not-allowed
-
-		&.noUi-target
-			border-width 0
-			border-color $fg
-			border-radius 4px
-			background-color rgba($fg, 0.25)
-			box-shadow none
-
-		&.noUi-horizontal
-			height 8px
-			cursor pointer
-
-		.noUi-connect
-			background-color $secondary
-
-		.noUi-handle
-			top -12px
-			width 32px
-			height 32px
-			border-width 3px
-			border-color $fg
-			border-radius 50%
-			background-color $white
-			cursor pointer
-
-			&:before
-				display none
-
-			&:after
-				display none
-
 	.content__scale
 		&.is-disabled
 			opacity 0.33
