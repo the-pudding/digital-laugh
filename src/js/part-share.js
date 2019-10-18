@@ -4,7 +4,7 @@ import loadData from './load-data';
 import puddingChartVarWidth from './pudding-chart/varwidth';
 import colors from './colors';
 
-// const MIN_SHARE = 0.00005;
+const REM = 16;
 const MIN_SHARE = 0.0001;
 let shareData = [];
 let nestedData = [];
@@ -12,10 +12,21 @@ let chart = null;
 
 const $section = d3.select('#share');
 const $content = $section.select('.section__content');
-const $figure = $content.select('figure');
+const $chartLower = $content.select('.chart-lower');
+const $chartCase = $content.select('.chart-case');
+const $figureLower = $chartLower.select('figure');
+const $figureCase = $chartCase.select('figure');
+
+function updateFigureDimensions() {
+  const m = REM * 2;
+  const o = $chartCase.select('.case__header').node().offsetHeight;
+  const h = window.innerHeight - o - m;
+  $figureCase.style('height', `${h}px`);
+}
 
 function resize() {
   if ($content.size()) {
+    updateFigureDimensions();
   }
 }
 
@@ -52,13 +63,29 @@ function setupCase(data) {
     .map(d => d.value)
     .filter(d => d.sumShare >= MIN_SHARE);
 
-  chart = $figure.datum(nestedData).puddingChartVarWidth();
+  chart = $figureCase.datum(nestedData).puddingChartVarWidth();
 
   // console.table(nestedData);
-  chart
-    .data(nestedData.filter(d => !['lol', 'haha', 'lmao'].includes(d.id)))
-    .resize()
-    .render();
+  setTimeout(() => {
+    chart
+      .data(nestedData.filter(d => d.sumShare <= 0.1))
+      .resize()
+      .render();
+  }, 4000);
+
+  setTimeout(() => {
+    chart
+      .data(nestedData.filter(d => d.sumShare <= 0.005))
+      .resize()
+      .render();
+  }, 8000);
+
+  setTimeout(() => {
+    chart
+      .data(nestedData.filter(d => d.sumShare <= 0.001))
+      .resize()
+      .render();
+  }, 12000);
 }
 
 function setupLower(data) {
@@ -115,7 +142,7 @@ function setupLower(data) {
     .domain(extent)
     .range([12, 64]);
 
-  const $svg = $figure.append('svg');
+  const $svg = $figureLower.append('svg');
 
   const $g = $svg.append('g');
 
@@ -170,16 +197,18 @@ function setupLower(data) {
     .attr('y', d => (d.y1 - d.y0) / 2 + font(d.data.share) + 16)
     .style('opacity', d => (d.data.share < 0.1 ? 0 : 1));
 
-  console.table(clean);
+  // console.table(clean);
 }
 
 function setup([all, lower]) {
-  // setupCase(all);
   setupLower(lower);
+  setupCase(all);
 }
 
 function init() {
   if ($content.size()) {
+    updateFigureDimensions();
+
     loadData(['share--all.csv', 'share--case-insensitive.csv'])
       .then(setup)
       .catch(console.log);

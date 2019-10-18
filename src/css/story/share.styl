@@ -1,32 +1,82 @@
-#share
+#share .chart-lower
+	text
+		font-weight 600
+		font-family $mono
+
+	rect
+		stroke-width 2px
+		stroke $fg
+
+#share .chart-case
+	.case__header
+		padding 1rem 0
+		font-family $mono
+
+	.header__toggle
+		display flex
+		justify-content center
+		margin-bottom 1rem
+
+		button
+			width 8rem
+
+	.header__key
+		display flex
+		justify-content center
+
+		li
+			padding 0.5em
+			text-transform uppercase
+			line-height 1
+			set-type-size(small, false)
+			font-weight 600
+
+		li:first-of-type
+			background-color $gray-dark
+			color $white
+
+		li:last-of-type
+			background-color $gray
+			color $white
+
 	figure
-		margin 4rem auto
+		overflow hidden
+		margin 0 auto
+		min-height 320px
 		max-width 60rem
-		height 200vh
+		font-family $mono
 
 		ul
-			display flex
+			position relative
 			display block
-			flex-direction column
-			margin 2rem 0
 			height 100%
 
 		li
+			position absolute
+			top 0
+			left 0
 			display flex
 			margin-bottom 1px
-			// min-height 1px
+			width 100%
+			border 1px solid $bg
 
-		p
+			&.is-visible
+				.lower span
+					display block
+
+		div
 			position relative
 			margin 0
 
 		span
 			position absolute
-			top 0
-			left 0.5em
-			display block
+			top 50%
+			left 1rem
+			display none
 			color $white
-			set-type-size(x-small, false)
+			font-weight 600
+			line-height 1
+			transform translateY(-50%)
 
 		.upper
 			background-color $gray
@@ -36,11 +86,3 @@
 
 		.lower
 			background-color $gray-dark
-
-	text
-		font-weight 600
-		font-family $mono
-
-	rect
-		stroke-width 2px
-		stroke $fg

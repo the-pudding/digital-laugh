@@ -16,6 +16,8 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
     // dimension stuff
     let width = 0;
     let height = 0;
+    let maxFontSize = 0;
+    const sortType = 'share';
     const marginTop = 0;
     const marginBottom = 0;
     const marginLeft = 0;
@@ -27,19 +29,20 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
     const scaleH = d3.scaleLinear();
 
     // dom elements
-    const $svg = null;
-    const $axis = null;
     let $vis = null;
-    const $ul = null;
+
+    const DUR = 1000;
+    const EASE = d3.easeCubicInOut;
+    const MIN_H = 12;
 
     // helper functions
     function enter(sel) {
       const $laugh = sel.append('li').attr('class', 'laugh');
 
       const $p = $laugh
-        .selectAll('p')
+        .selectAll('div')
         .data(d => d.laughs, d => d.case)
-        .join('p')
+        .join('div')
         .attr('class', d => d.case);
 
       $p.append('span').text(d => d.id);
@@ -47,26 +50,42 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
       return $laugh;
     }
 
+    function exit(sel) {
+      sel.each((d, i, n) => {
+        const $laugh = d3.select(n[i]);
+        const t = +$laugh.style('top').replace('%', '');
+        // const h = +$laugh.style('height').replace('%', '');
+        const top = sortType === 'share' ? `${t - 100}%` : `${t}%`;
+        const left = sortType === 'share' ? 0 : '-100%';
+        const opacity = sortType === 'share' ? 0 : 1;
+        $laugh
+          .transition()
+          .duration(DUR * 0.67)
+          .ease(EASE)
+          .style('top', top)
+          .style('left', left)
+          .style('opacity', opacity)
+          .remove();
+      });
+    }
+
+    function tallEnough(d) {
+      const h = (d.sumCount / d.countTotal) * height;
+      return h >= MIN_H;
+    }
+
+    function sort(a, b) {
+      if (sortType === 'share') return d3.descending(a.sumShare, b.sumShare);
+
+      return d3.descending(
+        a.laughs[0].share / a.laughs[0].sumShare,
+        b.laughs[0].share / b.laughs[0].sumShare
+      );
+    }
+
     const Chart = {
       // called once at start
       init() {
-        // $svg = $sel.append('svg').attr('class', 'pudding-chart');
-        // const $g = $svg.append('g');
-
-        // // offset chart for margins
-        // $g.attr('transform', `translate(${marginLeft}, ${marginTop})`);
-
-        // // create axis
-        // $axis = $svg.append('g').attr('class', 'g-axis');
-
-        // // setup viz group
-        // $vis = $g.append('g').attr('class', 'g-vis');
-
-        // $vis
-        //   .selectAll('g')
-        //   .data(data)
-        //   .join(enter);
-
         $vis = $sel.append('ul');
 
         Chart.resize();
@@ -82,32 +101,53 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
         scaleY.range([0, height]);
         scaleH.range([0, width]);
 
-        // $svg
-        //   .attr('width', width + marginLeft + marginRight)
-        //   .attr('height', height + marginTop + marginBottom);
+        maxFontSize = Math.floor(width * 0.125);
+
         return Chart;
       },
       // update scales and render chart
       render() {
-        // data.sort((a, b) =>
-        //   d3.descending(
-        //     a.laughs[0].share / a.laughs[0].sumShare,
-        //     b.laughs[0].share / b.laughs[0].sumShare
-        //   )
-        // );
-
-        console.log(data);
-        const $laugh = $vis
-          .selectAll('.laugh')
-          .data(data, d => d.id)
-          .join(enter);
+        data.sort(sort);
 
         const countTotal = d3.sum(data, d => d.sumCount);
 
-        $laugh.style('height', d => d3.format('%')(d.sumCount / countTotal));
+        // add y position
+        let tally = 0;
+
+        const dataPos = data.map(d => {
+          const r = {
+            ...d,
+            countTotal,
+            top: tally,
+          };
+          tally += d.sumCount / countTotal;
+          return r;
+        });
+
+        const $laugh = $vis
+          .selectAll('.laugh')
+          .data(dataPos, d => d.id)
+          .join(enter, u => u, exit);
 
         $laugh
-          .selectAll('p')
+          .classed('is-visible', tallEnough)
+          .transition()
+          .duration(DUR)
+          .ease(EASE)
+          .delay(sortType === 'share' ? 0 : DUR * 0.5)
+          .style('top', d => d3.format('%')(d.top))
+          .style('height', d => d3.format('%')(d.sumCount / d.countTotal))
+          .style(
+            'font-size',
+            d =>
+              `${Math.min(
+                Math.floor((d.sumCount / d.countTotal) * height * 0.5),
+                maxFontSize
+              )}px`
+          );
+
+        $laugh
+          .selectAll('div')
           .style('width', d => d3.format('%')(d.count / d.sumCount));
 
         return Chart;
