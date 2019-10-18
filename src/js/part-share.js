@@ -2,10 +2,10 @@
 
 import loadData from './load-data';
 import puddingChartVarWidth from './pudding-chart/varwidth';
-import colors from './colors';
 
 const REM = 16;
 const MIN_SHARE = 0.0001;
+const MIN_VIS = 0.002;
 let shareData = [];
 let nestedData = [];
 let chart = null;
@@ -33,6 +33,7 @@ function resize() {
 function setupCase(data) {
   shareData = data.map(d => ({
     id: d.id,
+    family: d.family,
     count: +d.count,
     share: +d['2019'],
   }));
@@ -126,15 +127,6 @@ function setupLower(data) {
 
   const root = treemap(hiearchy);
 
-  // const color = d3.scaleOrdinal(d3.schemeCategory10);
-  const colorMap = {
-    lol: colors.white,
-    ha: colors.yellow,
-    acronym: colors.orange,
-    other: colors.blue,
-    text: colors.black,
-  };
-
   const extent = d3.extent(clean, d => d.share);
   const font = d3
     .scalePow()
@@ -156,39 +148,50 @@ function setupLower(data) {
     .selectAll('g')
     .data(root.leaves())
     .join('g')
-    .attr('transform', d => `translate(${d.x0},${d.y0})`);
+    .attr('transform', d => `translate(${d.x0},${d.y0})`)
+    .attr('class', d => `leaf leaf--${d.data.family}`);
 
   $leaf
     .append('rect')
-    .attr('fill', d => colorMap[d.data.family])
     .attr('width', d => d.x1 - d.x0)
     .attr('height', d => d.y1 - d.y0);
 
   $leaf
     .append('text')
-    .attr('data-text', 'id')
+    .attr('class', 'text-id text-id--bg')
     .text(d => d.data.id)
     .style('font-size', d => font(d.data.share))
     .attr('text-anchor', 'middle')
     .attr('alignment-baseline', 'middle')
     .attr('x', d => (d.x1 - d.x0) / 2)
     .attr('y', d => (d.y1 - d.y0) / 2)
-    .style('opacity', d => (d.data.share < 0.001 ? 0 : 1));
+    .style('opacity', d => (d.data.share < MIN_VIS ? 0 : 1));
 
   $leaf
     .append('text')
-    .attr('class', 'text--share')
+    .attr('class', 'text-id text-id--fg')
+    .text(d => d.data.id)
+    .style('font-size', d => font(d.data.share))
+    .attr('text-anchor', 'middle')
+    .attr('alignment-baseline', 'middle')
+    .attr('x', d => (d.x1 - d.x0) / 2)
+    .attr('y', d => (d.y1 - d.y0) / 2)
+    .style('opacity', d => (d.data.share < MIN_VIS ? 0 : 1));
+
+  $leaf
+    .append('text')
+    .attr('class', 'text-share')
     .text(d => d3.format('.1%')(d.data.share))
     .style('font-size', '12px')
     .attr('text-anchor', 'middle')
     .attr('alignment-baseline', 'middle')
     .attr('x', d => (d.x1 - d.x0) / 2)
     .attr('y', d => (d.y1 - d.y0) / 2 + font(d.data.share))
-    .style('opacity', d => (d.data.share < 0.001 ? 0 : 1));
+    .style('opacity', d => (d.data.share < MIN_VIS ? 0 : 1));
 
   $leaf
     .append('text')
-    .attr('class', 'text--count')
+    .attr('class', 'text-count')
     .text(d => d3.format(',')(d.data.count))
     .style('font-size', '12px')
     .attr('text-anchor', 'middle')

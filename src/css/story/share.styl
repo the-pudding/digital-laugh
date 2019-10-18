@@ -1,14 +1,74 @@
 #share .chart-lower
+	figure
+		margin 4rem auto
+
+	svg
+		display block
+		margin 0 auto
+
 	text
 		font-weight 600
 		font-family $mono
 
+	.text-id--bg
+		fill none
+		stroke $fg
+		stroke-width 5px
+
+	.text-id--fg
+		// stroke none
+		fill $fg
+
 	rect
 		stroke-width 2px
-		stroke $fg
+		// stroke $fg
+
+	.leaf--lol
+		rect
+			fill $yellow
+			stroke darken($yellow, 25)
+
+		.text-id--bg
+			stroke darken($yellow, 0)
+
+	.leaf--ha
+		rect
+			fill $green
+			stroke darken($green, 20)
+
+		.text-id--bg
+			stroke darken($green, 0)
+
+	.leaf--acronym
+		rect
+			fill $red
+			stroke darken($red, 20)
+
+		.text-id--bg
+			stroke darken($red, 0)
+
+	.leaf--other
+		rect
+			fill $orange
+			stroke darken($orange, 20)
+
+		.text-id--bg
+			stroke darken($orange, 0)
+
+	.leaf--text
+		rect
+			fill $blue
+			stroke lighten($blue, 20)
+
+		.text-id--fg
+			stroke lighten($blue, 0)
 
 #share .chart-case
+	figure
+		margin 4rem auto
+
 	.case__header
+		margin 4rem auto
 		padding 1rem 0
 		font-family $mono
 
@@ -49,17 +109,21 @@
 		ul
 			position relative
 			display block
+			overflow hidden
 			height 100%
+			border-bottom 4px solid $fg
 
 		li
 			position absolute
 			top 0
 			left 0
 			display flex
-			margin-bottom 1px
 			width 100%
-			border 1px solid $bg
+			border-top 4px solid $fg
+			border-right 4px solid $fg
+			border-left 4px solid $fg
 
+			// border-top 2px solid $bg
 			&.is-visible
 				.lower span
 					display block
@@ -74,15 +138,104 @@
 			left 1rem
 			display none
 			color $white
+			color $fg
 			font-weight 600
 			line-height 1
 			transform translateY(-50%)
 
 		.upper
-			background-color $gray
+			background repeating-linear-gradient(
+				45deg,
+				$bg,
+				$bg 4px,
+				$fg 4px,
+				$fg 8px
+			)
 
 			span
 				display none
 
 		.lower
-			background-color $gray-dark
+			background-color $fg
+
+			span
+				color $fg
+
+	figure li
+		&.family--lol
+			// border-color darken($yellow, 25)
+			.lower
+				border-right 4px solid $fg
+				background-color $yellow
+
+			.upper
+				background repeating-linear-gradient(
+					45deg,
+					$yellow,
+					$yellow 4px,
+					$fg 4px,
+					$fg 8px
+				)
+
+		&.family--ha
+			// border-color darken($green, 20)
+			.lower
+				border-right 4px solid $fg
+				background-color $green
+
+			.upper
+				background repeating-linear-gradient(
+					45deg,
+					$green,
+					$green 4px,
+					$fg 4px,
+					$fg 8px
+				)
+
+		&.family--acronym
+			// border-color darken($red, 20)
+			.lower
+				border-right 4px solid $fg
+				background-color $red
+
+			.upper
+				background repeating-linear-gradient(
+					45deg,
+					$red,
+					$red 4px,
+					$fg 4px,
+					$fg 8px
+				)
+
+		&.family--other
+			// border-color darken($orange, 20)
+			.lower
+				border-right 4px solid $fg
+				background-color $orange
+
+			.upper
+				background repeating-linear-gradient(
+					45deg,
+					$orange,
+					$orange 4px,
+					$fg 4px,
+					$fg 8px
+				)
+
+		&.family--text
+			// border-color lighten($blue, 30)
+			.lower
+				border-right 4px solid $fg
+				background-color $blue
+
+			.upper
+				background repeating-linear-gradient(
+					45deg,
+					$blue,
+					$blue 4px,
+					$fg 4px,
+					$fg 8px
+				)
+
+			span
+				color $white

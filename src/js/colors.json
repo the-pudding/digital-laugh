@@ -1,8 +1,9 @@
 {
 	"green": "#61E8E1",
-	"blue": "#25349D",
+	"blue": "#21339D",
 	"yellow": "#FFFA5D",
 	"orange": "#FEA850",
+	"red": "#EE6352",
 	"black": "#282828",
 	"white": "#fff"
 }

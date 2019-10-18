@@ -22,6 +22,7 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
     const marginBottom = 0;
     const marginLeft = 0;
     const marginRight = 0;
+    const borderSize = 0;
 
     // scales
     const scaleX = d3.scaleLinear();
@@ -37,7 +38,9 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
 
     // helper functions
     function enter(sel) {
-      const $laugh = sel.append('li').attr('class', 'laugh');
+      const $laugh = sel
+        .append('li')
+        .attr('class', d => `laugh family--${d.laughs[0].family}`);
 
       const $p = $laugh
         .selectAll('div')
@@ -53,9 +56,9 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
     function exit(sel) {
       sel.each((d, i, n) => {
         const $laugh = d3.select(n[i]);
-        const t = +$laugh.style('top').replace('%', '');
+        const t = +$laugh.style('top').replace('px', '');
         // const h = +$laugh.style('height').replace('%', '');
-        const top = sortType === 'share' ? `${t - 100}%` : `${t}%`;
+        const top = sortType === 'share' ? `${t - height}px` : `${t}px`;
         const left = sortType === 'share' ? 0 : '-100%';
         const opacity = sortType === 'share' ? 0 : 1;
         $laugh
@@ -93,9 +96,11 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
       },
       // on resize, update new dimensions
       resize() {
+        const borderTotal = borderSize * data.length;
         // defaults to grabbing dimensions from container element
         width = $sel.node().offsetWidth - marginLeft - marginRight;
-        height = $sel.node().offsetHeight - marginTop - marginBottom;
+        height =
+          $sel.node().offsetHeight - marginTop - marginBottom - borderTotal;
 
         scaleX.range([0, width]);
         scaleY.range([0, height]);
@@ -112,15 +117,17 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
         const countTotal = d3.sum(data, d => d.sumCount);
 
         // add y position
-        let tally = 0;
+        let tallyH = 0;
 
-        const dataPos = data.map(d => {
+        const dataPos = data.map((d, i) => {
+          const h = Math.ceil((d.sumCount / countTotal) * height);
           const r = {
             ...d,
             countTotal,
-            top: tally,
+            top: tallyH,
+            height: h,
           };
-          tally += d.sumCount / countTotal;
+          tallyH += h + borderSize;
           return r;
         });
 
@@ -135,8 +142,8 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
           .duration(DUR)
           .ease(EASE)
           .delay(sortType === 'share' ? 0 : DUR * 0.5)
-          .style('top', d => d3.format('%')(d.top))
-          .style('height', d => d3.format('%')(d.sumCount / d.countTotal))
+          .style('top', d => `${d.top}px`)
+          .style('height', d => `${d.height}px`)
           .style(
             'font-size',
             d =>

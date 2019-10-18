@@ -1,9 +1,14 @@
-<figure class='figure-lower'>
-	
-</figure>
+<div class='chart-lower'>
+	<figure></figure>
+</div>
+
+<div class='prose'>
+	{{#each @root.doc.share.tween}}
+	<p>{{{value}}}</p>
+	{{/each}}
+</div>
 
 <div class='chart-case'>
-	
 	<div class='case__header'>
 		<ul class='header__toggle'>
 			<li><button class='btn btn--border is-active'>All</button></li>
@@ -19,8 +24,7 @@
 	</div>
 
 	<figure>
-	</figure>
-	
+	</figure>	
 </div>
 
 
