@@ -49,19 +49,19 @@
 
 	.leaf--other
 		rect
-			fill $orange
-			stroke darken($orange, 20)
+			fill $purple
+			stroke darken($purple, 20)
 
 		.text-id--bg
-			stroke darken($orange, 0)
+			stroke darken($purple, 0)
 
 	.leaf--text
 		rect
-			fill $blue
-			stroke lighten($blue, 20)
+			fill $grey
+			stroke darken($grey, 15)
 
 		.text-id--fg
-			stroke lighten($blue, 0)
+			stroke darken($grey, 0)
 
 #share .chart-case
 	figure
@@ -208,34 +208,31 @@
 				)
 
 		&.family--other
-			// border-color darken($orange, 20)
+			// border-color darken($purple, 20)
 			.lower
 				border-right 4px solid $fg
-				background-color $orange
+				background-color $purple
 
 			.upper
 				background repeating-linear-gradient(
 					45deg,
-					$orange,
-					$orange 4px,
+					$purple,
+					$purple 4px,
 					$fg 4px,
 					$fg 8px
 				)
 
 		&.family--text
-			// border-color lighten($blue, 30)
+			// border-color lighten($grey, 30)
 			.lower
 				border-right 4px solid $fg
-				background-color $blue
+				background-color $grey
 
 			.upper
 				background repeating-linear-gradient(
 					45deg,
-					$blue,
-					$blue 4px,
+					$grey,
+					$grey 4px,
 					$fg 4px,
 					$fg 8px
 				)
-
-			span
-				color $white
