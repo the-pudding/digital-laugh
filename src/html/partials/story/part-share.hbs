@@ -1,4 +1,14 @@
 <div class='chart-lower'>
+	<div class='lower__header'>
+		<ul class='header__key'>
+			<li class='key--lol'>lol</li>
+			<li class='key--ha'>ha</li>
+			<li class='key--acronym'>acronym</li>
+			<li class='key--other'>other</li>
+			<li class='key--text'>text</li>
+		</ul>
+	</div>
+	
 	<figure></figure>
 </div>
 
@@ -10,7 +20,7 @@
 
 <div class='chart-case'>
 	<div class='case__header'>
-		<div class='header__slider slider'></div>
+		
 		{{!-- <ul class='header__toggle'>
 			<li><button class='btn btn--border is-active'>All</button></li>
 			<li><button class='btn btn--border'>&lt; 10%</button></li>
@@ -19,9 +29,14 @@
 		</ul> --}}
 		
 		<ul class='header__key'>
-			<li>Lowercase</li>
-			<li>Uppercase</li>
+			<li><span>lowercase</span></li>
+			<li><span>Uppercase</span></li>
 		</ul>
+
+		{{!-- <div class='slider-label'> --}}
+		<p class='slider-label'>Zoom Level</p>
+		{{!-- </div> --}}
+		<div class='header__slider slider'></div>
 	</div>
 
 	<figure>

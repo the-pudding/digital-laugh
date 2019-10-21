@@ -7,6 +7,7 @@ import puddingChartVarWidth from './pudding-chart/varwidth';
 
 const REM = 16;
 const MIN_SHARE = 0.0001;
+const SLIDER_MULT = 1000;
 let shareData = [];
 let nestedData = [];
 let chartLower = null;
@@ -21,22 +22,33 @@ const $figureLower = $chartLower.select('figure');
 const $figureCase = $chartCase.select('figure');
 const $slider = $chartCase.select('.slider');
 
-function handleSlider([a]) {
-  console.log(a);
-  // min = Math.round(+a);
-  // max = Math.round(+b);
-  // $scaleItem.classed('is-active', d => d >= min && d <= max);
+function updateCase({ thresh, animate }) {
+  const data = nestedData.filter(d => d.sumShare <= thresh);
+  chartCase
+    .data(data)
+    .resize()
+    .render(animate);
+}
+
+// function handleSliderSlide([a]) {
+//   const thresh = +a / SLIDER_MULT;
+//   updateCase({ thresh, animate: false });
+// }
+
+function handleSliderSet([a]) {
+  const thresh = +a / SLIDER_MULT;
+  updateCase({ thresh, animate: true });
 }
 
 function updateFigureDimensions() {
   const m = REM * 2;
   const o = $chartCase.select('.case__header').node().offsetHeight;
-  const h = window.innerHeight - o - m;
+  const h = Math.floor(window.innerHeight - o - m);
   $figureCase.style('height', `${h}px`);
 
   const w = $figureLower.node().offsetWidth;
   const h2 = window.innerHeight * 0.9;
-  const sz = Math.min(w, h2);
+  const sz = Math.floor(Math.min(w, h2));
 
   $figureLower.style('width', `${sz}px`).style('height', `${sz}px`);
 }
@@ -45,6 +57,25 @@ function resize() {
   if ($content.size()) {
     updateFigureDimensions();
   }
+}
+
+function setupSlider(data) {
+  const l = data.length;
+  const max = data[0].sumShare * SLIDER_MULT;
+  const min = data[Math.floor(l * 0.8)].sumShare * SLIDER_MULT;
+  const q3 = data[Math.floor(l * 0.2)].sumShare * SLIDER_MULT;
+  const q2 = data[Math.floor(l * 0.4)].sumShare * SLIDER_MULT;
+  const start = max;
+
+  slider = noUiSlider.create($slider.node(), {
+    start: [start],
+    connect: false,
+    direction: 'rtl',
+    range: { min: [min], '50%': q2, '75%': q3, max: [max] },
+  });
+
+  slider.on('set', handleSliderSet);
+  // slider.on('slide', handleSliderSlide);
 }
 
 function setupCase(data) {
@@ -81,29 +112,30 @@ function setupCase(data) {
     .map(d => d.value)
     .filter(d => d.sumShare >= MIN_SHARE);
 
+  nestedData.sort((a, b) => d3.descending(a.sumShare, b.sumShare));
   chartCase = $figureCase.datum(nestedData).puddingChartVarWidth();
 
-  // console.table(nestedData);
-  setTimeout(() => {
-    chartCase
-      .data(nestedData.filter(d => d.sumShare <= 0.1))
-      .resize()
-      .render();
-  }, 4000);
+  setupSlider(nestedData);
+  // setTimeout(() => {
+  //   chartCase
+  //     .data(nestedData.filter(d => d.sumShare <= 0.1))
+  //     .resize()
+  //     .render();
+  // }, 4000);
 
-  setTimeout(() => {
-    chartCase
-      .data(nestedData.filter(d => d.sumShare <= 0.005))
-      .resize()
-      .render();
-  }, 8000);
+  // setTimeout(() => {
+  //   chartCase
+  //     .data(nestedData.filter(d => d.sumShare <= 0.005))
+  //     .resize()
+  //     .render();
+  // }, 8000);
 
-  setTimeout(() => {
-    chartCase
-      .data(nestedData.filter(d => d.sumShare <= 0.001))
-      .resize()
-      .render();
-  }, 12000);
+  // setTimeout(() => {
+  //   chartCase
+  //     .data(nestedData.filter(d => d.sumShare <= 0.001))
+  //     .resize()
+  //     .render();
+  // }, 12000);
 }
 
 function setupLower(data) {
@@ -130,22 +162,9 @@ function setupLower(data) {
   chartLower = $figureLower.datum(treeData).puddingChartTreeMap();
 }
 
-function setupSlider() {
-  slider = noUiSlider.create($slider.node(), {
-    start: [0],
-    connect: false,
-    step: 1,
-    range: { min: 0, max: 4 },
-  });
-
-  slider.on('set', handleSlider);
-  slider.on('slide', handleSlider);
-}
-
 function setup([all, lower]) {
   setupLower(lower);
   setupCase(all);
-  setupSlider();
 }
 
 function init() {

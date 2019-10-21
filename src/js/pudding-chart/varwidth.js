@@ -34,7 +34,9 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
 
     const DUR = 1000;
     const EASE = d3.easeCubicInOut;
-    const MIN_H = 12;
+    const MIN_H = 24;
+
+    let animationDuration = 0;
 
     // helper functions
     function enter(sel) {
@@ -42,13 +44,20 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
         .append('li')
         .attr('class', d => `laugh family--${d.laughs[0].family}`);
 
-      const $p = $laugh
+      const $div = $laugh
         .selectAll('div')
         .data(d => d.laughs, d => d.case)
         .join('div')
         .attr('class', d => d.case);
 
-      $p.append('span').text(d => d.id);
+      const $p = $div.append('p');
+
+      $p.append('span')
+        .attr('class', 'label')
+        .text(d => d.id);
+      $p.append('span')
+        .attr('class', 'share')
+        .text(d => d3.format('.2%')(d.sumShare));
 
       return $laugh;
     }
@@ -63,7 +72,7 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
         const opacity = sortType === 'share' ? 0 : 1;
         $laugh
           .transition()
-          .duration(DUR * 0.67)
+          .duration(animationDuration * 0.67)
           .ease(EASE)
           .style('top', top)
           .style('left', left)
@@ -72,9 +81,14 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
       });
     }
 
-    function tallEnough(d) {
+    function showText(d) {
       const h = (d.sumCount / d.countTotal) * height;
       return h >= MIN_H;
+    }
+
+    function showStripe(d) {
+      const h = (d.sumCount / d.countTotal) * height;
+      return h >= MIN_H * 0.5;
     }
 
     function sort(a, b) {
@@ -106,12 +120,14 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
         scaleY.range([0, height]);
         scaleH.range([0, width]);
 
-        maxFontSize = Math.floor(width * 0.125);
+        maxFontSize = Math.floor(width * 0.0825);
 
         return Chart;
       },
       // update scales and render chart
-      render() {
+      render(shouldAnimate) {
+        animationDuration = shouldAnimate ? DUR : 500;
+
         data.sort(sort);
 
         const countTotal = d3.sum(data, d => d.sumCount);
@@ -127,7 +143,7 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
             top: tallyH,
             height: h,
           };
-          tallyH += h + borderSize;
+          tallyH += h + (h >= 4 ? -4 : 0);
           return r;
         });
 
@@ -137,11 +153,12 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
           .join(enter, u => u, exit);
 
         $laugh
-          .classed('is-visible', tallEnough)
+          .classed('is-text', showText)
+          .classed('is-stripe', showStripe)
           .transition()
-          .duration(DUR)
+          .duration(animationDuration)
           .ease(EASE)
-          .delay(sortType === 'share' ? 0 : DUR * 0.5)
+          .delay(sortType === 'share' ? 0 : animationDuration * 0.5)
           .style('top', d => `${d.top}px`)
           .style('height', d => `${d.height}px`)
           .style(

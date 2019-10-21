@@ -1,6 +1,6 @@
 #share .chart-lower
 	figure
-		margin 4rem auto
+		margin 2rem auto
 
 	svg
 		display block
@@ -13,10 +13,25 @@
 	.text-id--bg
 		fill none
 		stroke $fg
-		stroke-width 4px
+		stroke-width 3px
 
 	.text-id--fg
-		// stroke none
+		fill $fg
+
+	.text-share--bg
+		fill none
+		stroke $fg
+		stroke-width 3px
+
+	.text-share--fg
+		fill $fg
+
+	.text-count--bg
+		fill none
+		stroke $fg
+		stroke-width 3px
+
+	.text-count--fg
 		fill $fg
 
 	rect
@@ -27,50 +42,81 @@
 
 	.leaf--lol
 		rect
-			fill $yellow
-			stroke darken($yellow, 25)
+			fill $c-lol
+			stroke darken($c-lol, 25)
 
-		.text-id--bg
-			stroke darken($yellow, 0)
+		.text-id--bg, .text-share--bg, .text-count--bg
+			stroke darken($c-lol, 0)
 
 	.leaf--ha
 		rect
-			fill $green
-			stroke darken($green, 20)
+			fill $c-ha
+			stroke darken($c-ha, 20)
 
-		.text-id--bg
-			stroke darken($green, 0)
+		.text-id--bg, .text-share--bg, .text-count--bg
+			stroke darken($c-ha, 0)
 
 	.leaf--acronym
 		rect
-			fill $red
-			stroke darken($red, 20)
+			fill $c-acronym
+			stroke darken($c-acronym, 20)
 
-		.text-id--bg
-			stroke darken($red, 0)
+		.text-id--bg, .text-share--bg, .text-count--bg
+			stroke darken($c-acronym, 0)
 
 	.leaf--other
 		rect
-			fill $purple
-			stroke darken($purple, 10)
+			fill $c-other
+			stroke darken($c-other, 10)
 
-		.text-id--bg
-			stroke darken($purple, 0)
+		.text-id--bg, .text-share--bg, .text-count--bg
+			stroke darken($c-other, 0)
 
 	.leaf--text
 		rect
-			fill $grey
-			stroke darken($grey, 20)
+			fill $c-text
+			stroke darken($c-text, 20)
 
-		.text-id--fg
-			stroke darken($grey, 0)
+		.text-id--bg, .text-share--bg, .text-count--bg
+			stroke darken($c-text, 0)
+
+	.header__key
+		display flex
+		justify-content center
+
+		li
+			padding 0.5em
+			// text-transform uppercase
+			line-height 1
+			set-type-size(small, false)
+			width 6rem
+			text-align center
+			font-weight 600
+			font-family $mono
+
+		.key--lol
+			background-color $c-lol
+
+		.key--ha
+			background-color $c-ha
+
+		.key--acronym
+			background-color $c-acronym
+
+		.key--text
+			background-color $c-text
+
+		.key--other
+			background-color $c-other
 
 #share .chart-case
 	figure
-		margin 4rem auto
+		margin 2rem auto
+		margin-top 0
 
 	.case__header
-		margin 4rem auto
+		margin 1rem auto
+		margin-top 2rem
 		padding 1rem 0
 		font-family $mono
 
@@ -79,8 +125,37 @@
 		justify-content center
 		margin-bottom 1rem
 
-		button
-			width 8rem
+	.header__slider
+		margin 0 auto
+		min-width 10rem
+		width 25%
+
+	.slider-label
+		margin 1rem auto
+		min-width 10rem
+		width 25%
+		text-align center
+		text-transform uppercase
+		set-type-size(small, false)
+		position relative
+		font-weight 600
+
+		&:before
+			position absolute
+			top 0
+			left 0
+			display inline-block
+			content '-'
+
+		&:after
+			position absolute
+			top 0
+			right 0
+			display inline-block
+			content '+'
+
+	button
+		width 8rem
 
 	.header__key
 		display flex
@@ -88,21 +163,34 @@
 
 		li
 			padding 0.5em
-			text-transform uppercase
 			line-height 1
 			set-type-size(small, false)
+			width 6rem
+			border 2px solid $fg
+			text-align center
 			font-weight 600
 
+		span
+			display block
+			transform translateY(-175%)
+
 		li:first-of-type
-			background-color $gray-dark
-			color $white
+			border-right none
+			background-color $grey
+			color $fg
 
 		li:last-of-type
-			background-color $gray
-			color $white
+			background repeating-linear-gradient(
+				45deg,
+				transparent,
+				transparent 2px,
+				$fg 2px,
+				$fg 4px
+			)
+			color $fg
+			text-transform uppercase
 
 	figure
-		overflow hidden
 		margin 0 auto
 		min-height 320px
 		max-width 60rem
@@ -111,9 +199,7 @@
 		ul
 			position relative
 			display block
-			overflow hidden
 			height 100%
-			border-bottom 4px solid $fg
 
 		li
 			position absolute
@@ -121,75 +207,84 @@
 			left 0
 			display flex
 			width 100%
-			border-top 4px solid $fg
-			border-right 4px solid $fg
-			border-left 4px solid $fg
+			border 4px solid $fg
+			user-select none
 
-			// border-top 2px solid $bg
-			&.is-visible
-				.lower span
+			&.is-text
+				.lower p
 					display block
+
+			&.is-stripe
+				.upper
+					background repeating-linear-gradient(
+						45deg,
+						transparent,
+						transparent 4px,
+						$fg 4px,
+						$fg 8px
+					)
 
 		div
 			position relative
 			margin 0
 
-		span
+		p
 			position absolute
 			top 50%
 			left 1rem
 			display none
+			margin 0
 			color $white
 			color $fg
 			font-weight 600
+			font-size inherit
 			line-height 1
 			transform translateY(-50%)
 
-		.upper
-			background repeating-linear-gradient(
-				45deg,
-				transparent,
-				transparent 4px,
-				$fg 4px,
-				$fg 8px
-			)
+		.share
+			margin-left 0.75em
+			font-size 0.5em
+			opacity 0.5
 
-			span
+		.upper
+			background $fg
+
+			p
 				display none
 
 		.lower
 			background-color $fg
 
-			span
+			p
 				color $fg
 
 	figure li
 		&.family--lol
-			// border-color darken($yellow, 25)
+			// border-color darken($c-lol, 25)
 			.lower
 				border-right 4px solid $fg
-				background-color $yellow
+				background-color $c-lol
 
 		&.family--ha
-			// border-color darken($green, 20)
+			// border-color darken($c-ha, 20)
 			.lower
 				border-right 4px solid $fg
-				background-color $green
+				background-color $c-ha
 
 		&.family--acronym
-			// border-color darken($red, 20)
+			// border-color darken($c-acronym, 20)
 			.lower
 				border-right 4px solid $fg
-				background-color $red
+				background-color $c-acronym
 
 		&.family--other
-			// border-color darken($purple, 20)
+			// border-color darken($c-other, 20)
 			.lower
 				border-right 4px solid $fg
-				background-color $purple
+				background-color $c-other
 
 		&.family--text
-			// border-color lighten($grey, 30)
+			// border-color lighten($c-text, 30)
 			.lower
 				border-right 4px solid $fg
-				background-color $grey
+				background-color $c-text

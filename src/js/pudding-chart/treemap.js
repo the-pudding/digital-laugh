@@ -16,22 +16,20 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
     // dimension stuff
     let width = 0;
     let height = 0;
-    const marginTop = 16;
-    const marginBottom = 16;
-    const marginLeft = 16;
-    const marginRight = 16;
+    const marginTop = 24;
+    const marginBottom = 24;
+    const marginLeft = 24;
+    const marginRight = 24;
     const tile = 'treemapBinary';
 
     // scales
-    const scaleX = null;
-    const scaleY = null;
+    const scaleF = d3.scalePow().exponent(0.5);
 
     // dom elements
     let $svg = null;
-    let $axis = null;
     let $vis = null;
 
-    const MIN_VIS = 0.002;
+    const MIN_FONT_SIZE = 8;
 
     // helper functions
 
@@ -61,7 +59,11 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
         const sz = Math.min(w, h);
         width = sz - marginLeft - marginRight;
         height = sz - marginTop - marginBottom;
-        console.log({ width, height });
+
+        const maxF = Math.floor(sz * 0.125);
+        const minF = Math.max(MIN_FONT_SIZE, Math.floor(maxF * 0.05));
+        scaleF.domain(data.extent).range([minF, maxF]);
+
         $svg
           .attr('width', width + marginLeft + marginRight)
           .attr('height', height + marginTop + marginBottom);
@@ -83,70 +85,93 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
 
         const root = treemap(hiearchy);
 
-        const font = d3
-          .scalePow()
-          .exponent(0.5)
-          .domain(data.extent)
-          .range([12, 64]);
-
         $svg
           .style('width', `${width + marginLeft + marginRight}px`)
           .style('height', `${height + marginTop + marginBottom}px`);
 
-        const $leaf = $vis
-          .selectAll('g')
+        const $leafRect = $vis
+          .selectAll('.leaf-rect')
           .data(root.leaves())
           .join('g')
           .attr('transform', d => `translate(${d.x0},${d.y0})`)
-          .attr('class', d => `leaf leaf--${d.data.family}`);
+          .attr('class', d => `leaf leaf-rect leaf--${d.data.family}`);
 
-        $leaf
+        $leafRect
           .append('rect')
           .attr('width', d => d.x1 - d.x0)
           .attr('height', d => d.y1 - d.y0);
 
-        $leaf
+        const $leafText = $vis
+          .selectAll('.leaf-text')
+          .data(root.leaves())
+          .join('g')
+          .attr('transform', d => `translate(${d.x0},${d.y0})`)
+          .attr('class', d => `leaf leaf-text leaf--${d.data.family}`);
+
+        $leafText
           .append('text')
           .attr('class', 'text-id text-id--bg')
           .text(d => d.data.id)
-          .style('font-size', d => font(d.data.share))
+          .style('font-size', d => scaleF(d.data.share))
           .attr('text-anchor', 'middle')
           .attr('alignment-baseline', 'middle')
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2)
-          .style('opacity', d => (d.data.share < MIN_VIS ? 0 : 1));
+          .style('opacity', d => (d.data.share < 0.001 ? 0 : 1));
 
-        $leaf
+        $leafText
           .append('text')
           .attr('class', 'text-id text-id--fg')
           .text(d => d.data.id)
-          .style('font-size', d => font(d.data.share))
+          .style('font-size', d => scaleF(d.data.share))
           .attr('text-anchor', 'middle')
           .attr('alignment-baseline', 'middle')
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2)
-          .style('opacity', d => (d.data.share < MIN_VIS ? 0 : 1));
+          .style('opacity', d => (d.data.share < 0.001 ? 0 : 1));
 
-        $leaf
+        $leafText
           .append('text')
-          .attr('class', 'text-share')
+          .attr('class', 'text-share text-share--bg')
           .text(d => d3.format('.1%')(d.data.share))
           .style('font-size', '12px')
           .attr('text-anchor', 'middle')
-          .attr('alignment-baseline', 'middle')
+          .attr('alignment-baseline', 'hanging')
           .attr('x', d => (d.x1 - d.x0) / 2)
-          .attr('y', d => (d.y1 - d.y0) / 2 + font(d.data.share))
-          .style('opacity', d => (d.data.share < MIN_VIS ? 0 : 1));
+          .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 4)
+          .style('opacity', d => (d.data.share < 0.005 ? 0 : 1));
 
-        $leaf
+        $leafText
           .append('text')
-          .attr('class', 'text-count')
+          .attr('class', 'text-share text-share--fg')
+          .text(d => d3.format('.1%')(d.data.share))
+          .style('font-size', '12px')
+          .attr('text-anchor', 'middle')
+          .attr('alignment-baseline', 'hanging')
+          .attr('x', d => (d.x1 - d.x0) / 2)
+          .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 4)
+          .style('opacity', d => (d.data.share < 0.005 ? 0 : 1));
+
+        $leafText
+          .append('text')
+          .attr('class', 'text-count text-count--bg')
           .text(d => d3.format(',')(d.data.count))
           .style('font-size', '12px')
           .attr('text-anchor', 'middle')
-          .attr('alignment-baseline', 'middle')
+          .attr('alignment-baseline', 'hanging')
           .attr('x', d => (d.x1 - d.x0) / 2)
-          .attr('y', d => (d.y1 - d.y0) / 2 + font(d.data.share) + 16)
+          .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 20)
+          .style('opacity', d => (d.data.share < 0.1 ? 0 : 1));
+
+        $leafText
+          .append('text')
+          .attr('class', 'text-count text-count--fg')
+          .text(d => d3.format(',')(d.data.count))
+          .style('font-size', '12px')
+          .attr('text-anchor', 'middle')
+          .attr('alignment-baseline', 'hanging')
+          .attr('x', d => (d.x1 - d.x0) / 2)
+          .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 20)
           .style('opacity', d => (d.data.share < 0.1 ? 0 : 1));
 
         return Chart;
