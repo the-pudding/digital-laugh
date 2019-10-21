@@ -42,9 +42,6 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
         // offset chart for margins
         $g.attr('transform', `translate(${marginLeft}, ${marginTop})`);
 
-        // create axis
-        $axis = $svg.append('g').attr('class', 'g-axis');
-
         // setup viz group
         $vis = $g.append('g').attr('class', 'g-vis');
 
@@ -57,8 +54,8 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
         const w = $sel.node().offsetWidth;
         const h = $sel.node().offsetHeight;
         const sz = Math.min(w, h);
-        width = sz - marginLeft - marginRight;
-        height = sz - marginTop - marginBottom;
+        width = w - marginLeft - marginRight;
+        height = h - marginTop - marginBottom;
 
         const maxF = Math.floor(sz * 0.125);
         const minF = Math.max(MIN_FONT_SIZE, Math.floor(maxF * 0.05));
@@ -67,6 +64,7 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
         $svg
           .attr('width', width + marginLeft + marginRight)
           .attr('height', height + marginTop + marginBottom);
+
         return Chart;
       },
       // update scales and render chart
@@ -91,85 +89,112 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
 
         const $leafRect = $vis
           .selectAll('.leaf-rect')
-          .data(root.leaves())
-          .join('g')
+          .data(root.leaves(), d => d.data.id)
+          .join(enter => {
+            const $g = enter.append('g');
+            $g.append('rect');
+            return $g;
+          })
           .attr('transform', d => `translate(${d.x0},${d.y0})`)
           .attr('class', d => `leaf leaf-rect leaf--${d.data.family}`);
 
         $leafRect
-          .append('rect')
+          .select('rect')
           .attr('width', d => d.x1 - d.x0)
           .attr('height', d => d.y1 - d.y0);
 
         const $leafText = $vis
           .selectAll('.leaf-text')
-          .data(root.leaves())
-          .join('g')
+          .data(root.leaves(), d => d.data.id)
+          .join(enter => {
+            const $g = enter.append('g');
+            $g.append('text')
+              .attr('class', 'text-id text-id--bg')
+              .text(d => d.data.id)
+              .attr('text-anchor', 'middle')
+              .attr('alignment-baseline', 'middle');
+
+            $g.append('text')
+              .attr('class', 'text-id text-id--fg')
+              .text(d => d.data.id)
+              .attr('text-anchor', 'middle')
+              .attr('alignment-baseline', 'middle');
+
+            $g.append('text')
+              .attr('class', 'text-share text-share--bg')
+              .text(d => d3.format('.1%')(d.data.share))
+              .attr('text-anchor', 'middle')
+              .attr('alignment-baseline', 'hanging');
+
+            $g.append('text')
+              .attr('class', 'text-share text-share--fg')
+              .text(d => d3.format('.1%')(d.data.share))
+              .attr('text-anchor', 'middle')
+              .attr('alignment-baseline', 'hanging');
+
+            $g.append('text')
+              .attr('class', 'text-count text-count--bg')
+              .attr('text-anchor', 'middle')
+              .attr('alignment-baseline', 'hanging')
+              .text(d => {
+                const pre = d.data.id === 'lol' ? 'found in ' : '';
+                const post = d.data.id === 'lol' ? ' comments' : '';
+                return `${pre}${d3.format(',')(d.data.count)}${post}`;
+              });
+
+            $g.append('text')
+              .attr('class', 'text-count text-count--fg')
+              .attr('text-anchor', 'middle')
+              .attr('alignment-baseline', 'hanging')
+              .text(d => {
+                const pre = d.data.id === 'lol' ? 'found in ' : '';
+                const post = d.data.id === 'lol' ? ' comments' : '';
+                return `${pre}${d3.format(',')(d.data.count)}${post}`;
+              });
+
+            return $g;
+          })
           .attr('transform', d => `translate(${d.x0},${d.y0})`)
           .attr('class', d => `leaf leaf-text leaf--${d.data.family}`);
 
         $leafText
-          .append('text')
-          .attr('class', 'text-id text-id--bg')
-          .text(d => d.data.id)
+          .select('.text-id--bg')
           .style('font-size', d => scaleF(d.data.share))
-          .attr('text-anchor', 'middle')
-          .attr('alignment-baseline', 'middle')
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2)
           .style('opacity', d => (d.data.share < 0.001 ? 0 : 1));
 
         $leafText
-          .append('text')
-          .attr('class', 'text-id text-id--fg')
-          .text(d => d.data.id)
+          .select('.text-id--fg')
           .style('font-size', d => scaleF(d.data.share))
-          .attr('text-anchor', 'middle')
-          .attr('alignment-baseline', 'middle')
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2)
           .style('opacity', d => (d.data.share < 0.001 ? 0 : 1));
 
         $leafText
-          .append('text')
-          .attr('class', 'text-share text-share--bg')
-          .text(d => d3.format('.1%')(d.data.share))
+          .select('.text-share--bg')
           .style('font-size', '12px')
-          .attr('text-anchor', 'middle')
-          .attr('alignment-baseline', 'hanging')
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 4)
           .style('opacity', d => (d.data.share < 0.005 ? 0 : 1));
 
         $leafText
-          .append('text')
-          .attr('class', 'text-share text-share--fg')
-          .text(d => d3.format('.1%')(d.data.share))
+          .select('.text-share--fg')
           .style('font-size', '12px')
-          .attr('text-anchor', 'middle')
-          .attr('alignment-baseline', 'hanging')
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 4)
           .style('opacity', d => (d.data.share < 0.005 ? 0 : 1));
 
         $leafText
-          .append('text')
-          .attr('class', 'text-count text-count--bg')
-          .text(d => d3.format(',')(d.data.count))
+          .select('.text-count--bg')
           .style('font-size', '12px')
-          .attr('text-anchor', 'middle')
-          .attr('alignment-baseline', 'hanging')
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 20)
           .style('opacity', d => (d.data.share < 0.1 ? 0 : 1));
 
         $leafText
-          .append('text')
-          .attr('class', 'text-count text-count--fg')
-          .text(d => d3.format(',')(d.data.count))
+          .select('.text-count--fg')
           .style('font-size', '12px')
-          .attr('text-anchor', 'middle')
-          .attr('alignment-baseline', 'hanging')
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 20)
           .style('opacity', d => (d.data.share < 0.1 ? 0 : 1));

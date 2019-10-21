@@ -17,7 +17,7 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
     let width = 0;
     let height = 0;
     let maxFontSize = 0;
-    const sortType = 'share';
+    let sortType = 'usage';
     const marginTop = 0;
     const marginBottom = 0;
     const marginLeft = 0;
@@ -67,9 +67,9 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
         const $laugh = d3.select(n[i]);
         const t = +$laugh.style('top').replace('px', '');
         // const h = +$laugh.style('height').replace('%', '');
-        const top = sortType === 'share' ? `${t - height}px` : `${t}px`;
-        const left = sortType === 'share' ? 0 : '-100%';
-        const opacity = sortType === 'share' ? 0 : 1;
+        const top = sortType === 'usage' ? `${t - height}px` : `${t}px`;
+        const left = sortType === 'usage' ? 0 : '-100%';
+        const opacity = sortType === 'usage' ? 0 : 0;
         $laugh
           .transition()
           .duration(animationDuration * 0.67)
@@ -92,7 +92,7 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
     }
 
     function sort(a, b) {
-      if (sortType === 'share') return d3.descending(a.sumShare, b.sumShare);
+      if (sortType === 'usage') return d3.descending(a.sumShare, b.sumShare);
 
       return d3.descending(
         a.laughs[0].share / a.laughs[0].sumShare,
@@ -158,7 +158,7 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
           .transition()
           .duration(animationDuration)
           .ease(EASE)
-          .delay(sortType === 'share' ? 0 : animationDuration * 0.5)
+          .delay(sortType === 'usage' ? 0 : animationDuration * 0.0)
           .style('top', d => `${d.top}px`)
           .style('height', d => `${d.height}px`)
           .style(
@@ -172,7 +172,7 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
 
         $laugh
           .selectAll('div')
-          .style('width', d => d3.format('%')(d.count / d.sumCount));
+          .style('width', d => d3.format('.2%')(d.count / d.sumCount + 0.001));
 
         return Chart;
       },
@@ -181,6 +181,12 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
         if (!arguments.length) return data;
         data = val;
         $sel.datum(data);
+        Chart.render();
+        return Chart;
+      },
+      sort(val) {
+        if (!arguments.length) return sortType;
+        sortType = val;
         Chart.render();
         return Chart;
       },

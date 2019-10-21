@@ -30,10 +30,13 @@ function updateCase({ thresh, animate }) {
     .render(animate);
 }
 
-// function handleSliderSlide([a]) {
-//   const thresh = +a / SLIDER_MULT;
-//   updateCase({ thresh, animate: false });
-// }
+function handleToggleClick() {
+  const $btn = d3.select(this);
+  const val = $btn.text();
+  $chartCase.selectAll('.header__toggle button').classed('is-active', false);
+  $btn.classed('is-active', true);
+  chartCase.sort(val);
+}
 
 function handleSliderSet([a]) {
   const thresh = +a / SLIDER_MULT;
@@ -46,7 +49,7 @@ function updateFigureDimensions() {
   const h = Math.floor(window.innerHeight - o - m);
   $figureCase.style('height', `${h}px`);
 
-  const w = $figureLower.node().offsetWidth;
+  const w = $section.node().offsetWidth;
   const h2 = window.innerHeight * 0.9;
   const sz = Math.floor(Math.min(w, h2));
 
@@ -56,6 +59,8 @@ function updateFigureDimensions() {
 function resize() {
   if ($content.size()) {
     updateFigureDimensions();
+    chartLower.resize().render();
+    // chartCase.resize();
   }
 }
 
@@ -76,6 +81,10 @@ function setupSlider(data) {
 
   slider.on('set', handleSliderSet);
   // slider.on('slide', handleSliderSlide);
+}
+
+function setupToggle() {
+  $chartCase.selectAll('.header__toggle button').on('click', handleToggleClick);
 }
 
 function setupCase(data) {
@@ -116,26 +125,7 @@ function setupCase(data) {
   chartCase = $figureCase.datum(nestedData).puddingChartVarWidth();
 
   setupSlider(nestedData);
-  // setTimeout(() => {
-  //   chartCase
-  //     .data(nestedData.filter(d => d.sumShare <= 0.1))
-  //     .resize()
-  //     .render();
-  // }, 4000);
-
-  // setTimeout(() => {
-  //   chartCase
-  //     .data(nestedData.filter(d => d.sumShare <= 0.005))
-  //     .resize()
-  //     .render();
-  // }, 8000);
-
-  // setTimeout(() => {
-  //   chartCase
-  //     .data(nestedData.filter(d => d.sumShare <= 0.001))
-  //     .resize()
-  //     .render();
-  // }, 12000);
+  setupToggle();
 }
 
 function setupLower(data) {

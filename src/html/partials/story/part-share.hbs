@@ -1,5 +1,6 @@
 <div class='chart-lower'>
 	<div class='lower__header'>
+		<h4 class='header__title chart-title'>{{{@root.doc.share.chartLowerTitle}}}</h4>
 		<ul class='header__key'>
 			<li class='key--lol'>lol</li>
 			<li class='key--ha'>ha</li>
@@ -20,22 +21,21 @@
 
 <div class='chart-case'>
 	<div class='case__header'>
-		
-		{{!-- <ul class='header__toggle'>
-			<li><button class='btn btn--border is-active'>All</button></li>
-			<li><button class='btn btn--border'>&lt; 10%</button></li>
-			<li><button class='btn btn--border'>&lt; 0.5%</button></li>
-			<li><button class='btn btn--border'>&lt; 0.1%</button></li>
-		</ul> --}}
-		
+		<h4 class='header__title chart-title'>{{{@root.doc.share.chartCaseTitle}}}</h4>
+	
 		<ul class='header__key'>
 			<li><span>lowercase</span></li>
 			<li><span>Uppercase</span></li>
 		</ul>
 
-		{{!-- <div class='slider-label'> --}}
+		<ul class='header__toggle'>
+			<p>Sort by</p>
+			<li><button class='btn btn--border is-active'>Usage</button></li>
+			<li><button class='btn btn--border'>Ratio</button></li>
+		</ul>
+
 		<p class='slider-label'>Zoom Level</p>
-		{{!-- </div> --}}
+
 		<div class='header__slider slider'></div>
 	</div>
 

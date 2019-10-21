@@ -1,114 +1,3 @@
-#share .chart-lower
-	figure
-		margin 2rem auto
-
-	svg
-		display block
-		margin 0 auto
-
-	text
-		font-weight 600
-		font-family $mono
-
-	.text-id--bg
-		fill none
-		stroke $fg
-		stroke-width 3px
-
-	.text-id--fg
-		fill $fg
-
-	.text-share--bg
-		fill none
-		stroke $fg
-		stroke-width 3px
-
-	.text-share--fg
-		fill $fg
-
-	.text-count--bg
-		fill none
-		stroke $fg
-		stroke-width 3px
-
-	.text-count--fg
-		fill $fg
-
-	rect
-		stroke-width 4px
-		stroke-width 2px
-		stroke $fg
-		// stroke $fg
-
-	.leaf--lol
-		rect
-			fill $c-lol
-			stroke darken($c-lol, 25)
-
-		.text-id--bg, .text-share--bg, .text-count--bg
-			stroke darken($c-lol, 0)
-
-	.leaf--ha
-		rect
-			fill $c-ha
-			stroke darken($c-ha, 20)
-
-		.text-id--bg, .text-share--bg, .text-count--bg
-			stroke darken($c-ha, 0)
-
-	.leaf--acronym
-		rect
-			fill $c-acronym
-			stroke darken($c-acronym, 20)
-
-		.text-id--bg, .text-share--bg, .text-count--bg
-			stroke darken($c-acronym, 0)
-
-	.leaf--other
-		rect
-			fill $c-other
-			stroke darken($c-other, 10)
-
-		.text-id--bg, .text-share--bg, .text-count--bg
-			stroke darken($c-other, 0)
-
-	.leaf--text
-		rect
-			fill $c-text
-			stroke darken($c-text, 20)
-
-		.text-id--bg, .text-share--bg, .text-count--bg
-			stroke darken($c-text, 0)
-
-	.header__key
-		display flex
-		justify-content center
-
-		li
-			padding 0.5em
-			// text-transform uppercase
-			line-height 1
-			set-type-size(small, false)
-			width 6rem
-			text-align center
-			font-weight 600
-			font-family $mono
-
-		.key--lol
-			background-color $c-lol
-
-		.key--ha
-			background-color $c-ha
-
-		.key--acronym
-			background-color $c-acronym
-
-		.key--text
-			background-color $c-text
-
-		.key--other
-			background-color $c-other
-
 #share .chart-case
 	figure
 		margin 2rem auto
@@ -160,6 +49,7 @@
 	.header__key
 		display flex
 		justify-content center
+		margin-top 2rem
 
 		li
 			padding 0.5em
@@ -288,3 +178,6 @@
 			.lower
 				border-right 4px solid $fg
 				background-color $c-text
+
+	.header__toggle
+		display none
