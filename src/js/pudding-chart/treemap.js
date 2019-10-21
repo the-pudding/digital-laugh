@@ -122,13 +122,19 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
 
             $g.append('text')
               .attr('class', 'text-share text-share--bg')
-              .text(d => d3.format('.1%')(d.data.share))
+              .text(d => {
+                const post = d.data.id === 'lol' ? ' of all laughs' : '';
+                return `${d3.format('.1%')(d.data.share)}${post}`;
+              })
               .attr('text-anchor', 'middle')
               .attr('alignment-baseline', 'hanging');
 
             $g.append('text')
               .attr('class', 'text-share text-share--fg')
-              .text(d => d3.format('.1%')(d.data.share))
+              .text(d => {
+                const post = d.data.id === 'lol' ? ' of all laughs' : '';
+                return `${d3.format('.1%')(d.data.share)}${post}`;
+              })
               .attr('text-anchor', 'middle')
               .attr('alignment-baseline', 'hanging');
 
