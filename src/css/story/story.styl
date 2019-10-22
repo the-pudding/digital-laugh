@@ -115,3 +115,45 @@ q
 	text-align center
 	font-weight 600
 	font-family $mono
+	line-height 1.2
+
+.parts
+	margin-top 4rem
+
+	div
+		display flex
+		flex-wrap wrap
+		justify-content center
+		margin 0 auto
+		max-width $column-width
+
+	.btn
+		display flex
+		flex-direction column
+		justify-content space-between
+		width 20%
+		text-align center
+		set-type-size(small)
+		opacity 0.5
+		pointer-events none
+
+		&.is-live
+			opacity 1
+			pointer-events auto
+
+	span
+		display block
+		margin-bottom 0.5em
+		width 100%
+		font-weight 400
+		line-height 1.2
+		set-type-size(small)
+
+		&:last-of-type
+			margin-bottom 0
+
+	.part__index
+		opacity 0.5
+
+	.part__title
+		font-weight 600

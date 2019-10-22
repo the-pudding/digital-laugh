@@ -1,23 +1,22 @@
 <section id='outro'>
-	<ul class='outro__tease'>
-		{{#each doc.parts}}
-			{{#if live}}
-			{{else}}
-				<li>
-					<span>Part {{index}}</span>
-					<span>{{{title}}}</span>
-					<span>{{{release}}}</span>
-				</li>
-			{{/if}}
-		{{/each}}
-	</ul>
-
 	<div class='prose notes'>
+		<p>But wait...there’s more!</p>
+		<p>
+			<ul>
+			{{#each doc.parts}}
+				
+				{{#if live}}{{else}}<li><span class='part__index'>Part
+						{{index}}</span>: <span class='part__title'>{{{title}}}</span><span class='part__release'>{{{release}}}</span></li>{{/if}}
+			{{/each}}
+			</ul>
+		</p>
 		{{#each doc.notes}}
 		<p>{{{value}}}</p>
 		{{/each}}
 	</div>
+</section>
 
+<section id='method' class='section__info'><h2>Data and Method</h4>
 	<div class='prose method'>
 		{{#each doc.method}}
 		<p>{{{value}}}</p>

@@ -44,16 +44,15 @@ function handleSliderSet([a]) {
 }
 
 function updateFigureDimensions() {
-  const m = REM * 2;
-  const o = $chartCase.select('.case__header').node().offsetHeight;
-  const h = Math.floor(window.innerHeight - o - m);
-  $figureCase.style('height', `${h}px`);
-
   const w = $section.node().offsetWidth;
-  const h2 = window.innerHeight * 0.9;
-  const sz = Math.floor(Math.min(w, h2));
+  const ih = window.innerHeight * 0.9;
+  const sz = Math.floor(Math.min(w, ih));
+  $figureLower.style('width', `${w}px`).style('height', `${ih}px`);
 
-  $figureLower.style('width', `${sz}px`).style('height', `${sz}px`);
+  // const m = REM * 2;
+  const o = $chartCase.select('.case__header').node().offsetHeight;
+  const h = Math.floor(window.innerHeight - o);
+  $figureCase.style('height', `${h}px`);
 }
 
 function resize() {

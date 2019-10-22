@@ -40,9 +40,12 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
 
     // helper functions
     function enter(sel) {
+      const top = sortType === 'usage' ? `${-height}px` : `0px`;
       const $laugh = sel
         .append('li')
-        .attr('class', d => `laugh family--${d.laughs[0].family}`);
+        .attr('class', d => `laugh family--${d.laughs[0].family}`)
+        .style('top', top)
+        .style('opacity', 0);
 
       const $div = $laugh
         .selectAll('div')
@@ -168,7 +171,8 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
                 Math.floor((d.sumCount / d.countTotal) * height * 0.5),
                 maxFontSize
               )}px`
-          );
+          )
+          .style('opacity', 1);
 
         $laugh
           .selectAll('div')
