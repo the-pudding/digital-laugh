@@ -121,6 +121,7 @@ function setupCase(data) {
     .filter(d => d.sumShare >= MIN_SHARE);
 
   nestedData.sort((a, b) => d3.descending(a.sumShare, b.sumShare));
+
   chartCase = $figureCase.datum(nestedData).puddingChartVarWidth();
 
   setupSlider(nestedData);

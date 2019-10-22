@@ -55,19 +55,30 @@
 			padding 0.5em
 			line-height 1
 			set-type-size(small, false)
+			position relative
 			width 6rem
 			border 2px solid $fg
 			text-align center
 			font-weight 600
 
-		span
+		.label
 			display block
 			transform translateY(-175%)
+
+		.usage
+			position absolute
+			top 50%
+			display block
+			color $gray-dark
 
 		li:first-of-type
 			border-right none
 			background-color $grey
 			color $fg
+
+			.usage
+				left 0
+				transform translate(-125%, -50%)
 
 		li:last-of-type
 			background repeating-linear-gradient(
@@ -80,11 +91,29 @@
 			color $fg
 			text-transform uppercase
 
+			.usage
+				right 0
+				transform translate(125%, -50%)
+
 	figure
+		position relative
 		margin 0 auto
 		min-height 320px
 		max-width 60rem
 		font-family $mono
+
+		.annotation
+			position absolute
+			right 0
+			bottom 0
+			margin 0
+			width 10rem
+			set-type-size(small, false)
+			padding 0 1rem
+			transform translateX(100%)
+
+			&.is-hidden
+				display none
 
 		ul
 			position relative
@@ -101,6 +130,9 @@
 			user-select none
 
 			&.is-text
+				.share
+					opacity 1
+
 				.lower p
 					opacity 1
 
@@ -109,9 +141,9 @@
 					background repeating-linear-gradient(
 						45deg,
 						transparent,
-						transparent 4px,
-						$fg 4px,
-						$fg 8px
+						transparent 2px,
+						$fg 2px,
+						$fg 4px
 					)
 
 		div
@@ -131,19 +163,39 @@
 			line-height 1
 			transform translateY(-50%)
 
-		.share
+		.count
 			margin-left 0.75em
 			font-size 0.5em
 			opacity 0.5
 
+		.share
+			position absolute
+			top 50%
+			color $gray-dark
+			font-weight 600
+			font-size 12px
+			opacity 0
+
 		.upper
 			background $fg
+
+			.share
+				right 0
+				width 3rem
+				text-align left
+				transform translate(125%, -50%)
 
 			p
 				display none
 
 		.lower
 			background-color $fg
+
+			.share
+				left 0
+				width 3rem
+				text-align right
+				transform translate(-125%, -50%)
 
 			p
 				display block

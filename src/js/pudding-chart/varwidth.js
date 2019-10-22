@@ -51,16 +51,22 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
         .selectAll('div')
         .data(d => d.laughs, d => d.case)
         .join('div')
-        .attr('class', d => d.case);
+        .attr('class', d => `ratio ${d.case}`);
+
+      $div.append('div').attr('class', 'share');
 
       const $p = $div.append('p');
 
       $p.append('span')
         .attr('class', 'label')
         .text(d => d.id);
+
       $p.append('span')
-        .attr('class', 'share')
-        .text(d => d3.format('.2%')(d.sumShare));
+        .attr('class', 'count')
+        .text(d => {
+          const post = d.id === 'lol' ? ' total comments' : '';
+          return `${d3.format('.2s')(d.sumCount)}${post}`;
+        });
 
       return $laugh;
     }
@@ -75,7 +81,7 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
         const opacity = sortType === 'usage' ? 0 : 0;
         $laugh
           .transition()
-          .duration(animationDuration * 0.67)
+          .duration(animationDuration * 1)
           .ease(EASE)
           .style('top', top)
           .style('left', left)
@@ -108,6 +114,10 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
       init() {
         $vis = $sel.append('ul');
 
+        $sel
+          .append('div')
+          .attr('class', 'annotation')
+          .text('Zoom in to see lesser used laugh details');
         Chart.resize();
         Chart.render();
       },
@@ -155,13 +165,24 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
           .data(dataPos, d => d.id)
           .join(enter, u => u, exit);
 
+        $laugh.each((d, i, n) => {
+          d3.select(n[i])
+            .selectAll('.share')
+            .text(datum => {
+              const p = datum.count / datum.sumCount;
+              const f = d3.format('.1%')(p);
+              if (i > 0) return f.replace('%', '');
+              return f;
+            });
+        });
+
         $laugh
           .classed('is-text', showText)
           .classed('is-stripe', showStripe)
           .transition()
           .duration(animationDuration)
           .ease(EASE)
-          .delay(sortType === 'usage' ? 0 : animationDuration * 0.0)
+          // .delay(sortType === 'usage' ? 0 : animationDuration * 0.0)
           .style('top', d => `${d.top}px`)
           .style('height', d => `${d.height}px`)
           .style(
@@ -175,7 +196,7 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
           .style('opacity', 1);
 
         $laugh
-          .selectAll('div')
+          .selectAll('.ratio')
           .style('width', d => d3.format('.2%')(d.count / d.sumCount + 0.001));
 
         return Chart;
@@ -185,6 +206,7 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
         if (!arguments.length) return data;
         data = val;
         $sel.datum(data);
+        $sel.select('.annotation').classed('is-hidden', true);
         Chart.render();
         return Chart;
       },
