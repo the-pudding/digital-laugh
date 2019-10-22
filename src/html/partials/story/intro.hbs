@@ -1,18 +1,26 @@
 <div class='intro'>
 	<div class='intro__top'>
-		<h1 class='intro__hed'>{{{doc.hed}}}</h1>
-		{{!-- <h4 class='intro__dek'>{{doc.dek}}</h4> --}}
-		<div class='intro__images'>
+		<h1 class='top__hed--a'><span>laughing</span></h1>
+		<h1 class='top__hed--b'><span>on</span></h1>
+		<h1 class='top__hed--c'><span>line</span></h1>
+		<p class='top__byline'>
+			<span>
+			By <a href='{{meta.author2.url}}' target='_blank'>{{meta.author2.name}}</a>
+			<a href='{{meta.author.url}}' target='_blank'>{{meta.author.name}}</a>
+			<a href='{{meta.author3.url}}' target='_blank'>{{meta.author3.name}}</a>
+			<a href='{{meta.author4.url}}' target='_blank'>&amp; {{meta.author4.name}}</a>
+			</span>
+		</p>
+		<div class='top__stripes'></div>
+		{{!-- <div class='intro__images'>
 			<img src='assets/images/intro/hahahaha.png'>
 			<img src='assets/images/intro/imdead.png'>
 			<img src='assets/images/intro/lol.png'>
-		</div>
+		</div> --}}
 	</div>
 	
 	<div class='intro__bottom'>
-		<p class='intro__byline'>
-			By <a href='{{meta.author2.url}}' target='_blank'>{{meta.author2.name}}</a>, <a href='{{meta.author.url}}' target='_blank'>{{meta.author.name}}</a>, <a href='{{meta.author3.url}}' target='_blank'>{{meta.author3.name}}</a>
-		</p>
+		
 	</div>
 
 	<div class='intro__prelude prose'>
@@ -24,8 +32,8 @@
 		<div class='intro__parts parts'>
 			<div>
 				{{#each doc.parts}}
-					<a class='btn btn--border is-{{live}}' href='#{{slug}}'>
-						<span class='part__index'>Part {{index}}</span>
+					<a class='is-{{live}}' href='#{{slug}}'>
+						<span class='part__index'>{{index}}</span>
 						<span class='part__title'>{{{title}}}</span>
 						<span class='part__release'>{{{release}}}</span>
 					</a>

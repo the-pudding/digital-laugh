@@ -1,14 +1,18 @@
 <section id='outro'>
 	<div class='prose notes'>
-		<p>But wait...there’s more!</p>
+		<p>But wait...there’s more coming!</p>
 		<p>
-			<ul>
-			{{#each doc.parts}}
-				
-				{{#if live}}{{else}}<li><span class='part__index'>Part
-						{{index}}</span>: <span class='part__title'>{{{title}}}</span><span class='part__release'>{{{release}}}</span></li>{{/if}}
-			{{/each}}
-			</ul>
+			<div class='parts'>
+				{{#each doc.parts}}
+				{{#if live}}{{else}}
+					<a class='is-{{live}}' href='#{{slug}}'>
+						<span class='part__index'>{{index}}</span>
+						<span class='part__title'>{{{title}}}</span>
+						<span class='part__release'>{{{release}}}</span>
+					</a>
+				{{/if}}
+				{{/each}}
+			</div>
 		</p>
 		{{#each doc.notes}}
 		<p>{{{value}}}</p>
