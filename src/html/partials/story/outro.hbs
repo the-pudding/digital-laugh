@@ -1,6 +1,6 @@
 <section id='outro'>
 	<div class='prose notes'>
-		<p>But wait...there’s more coming!</p>
+		<p>{{{doc.more}}}</p>
 		<p>
 			<div class='parts'>
 				{{#each doc.parts}}
@@ -20,7 +20,8 @@
 	</div>
 </section>
 
-<section id='method' class='section__info'><h2>Data and Method</h4>
+<section id='method'>
+	<div class='section__info'><h2>Data and Method</h2></div>
 	<div class='prose method'>
 		{{#each doc.method}}
 		<p>{{{value}}}</p>
