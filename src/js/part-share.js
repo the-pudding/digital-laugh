@@ -90,8 +90,8 @@ function setupCase(data) {
   shareData = data.map(d => ({
     id: d.id,
     family: d.family,
-    count: +d.count,
-    share: +d['2019'],
+    count: +d.count_2019,
+    share: +d.share_2019,
   }));
 
   nestedData = d3
@@ -132,8 +132,8 @@ function setupLower(data) {
   const clean = data
     .map(d => ({
       ...d,
-      count: +d.count,
-      share: +d['2019'],
+      count: +d.count_2019,
+      share: +d.share_2019,
     }))
     .filter(d => d.share >= MIN_SHARE);
 
