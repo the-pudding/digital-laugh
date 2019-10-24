@@ -10,6 +10,7 @@ let chart = null;
 
 function resize() {
   if ($content.size()) {
+    chart.resize().render();
   }
 }
 function setup(data) {

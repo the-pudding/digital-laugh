@@ -1,6 +1,65 @@
 #lol
-	// figure
+	figure
+		margin-bottom 4rem
+		width 100%
+		height 80vh
+
 	path
-		stroke $fg
 		fill none
-		stroke-width 2px
+		stroke-linecap square
+
+	.path--bg
+		stroke-width 8px
+		stroke $fg
+
+	.path--fg
+		stroke-width 4px
+		stroke $gray
+
+	text
+		font-weight 600
+		font-family $mono
+
+	.laugh--lol
+		.path--bg
+			stroke $fg
+			stroke-width 24px
+
+		.path--fg
+			stroke $c-lol
+			stroke-width 16px
+
+		text
+			set-type-size(xxxx-large, false)
+
+	.laugh.is-noise
+		text
+			display none
+
+		.path--fg
+			stroke $gray-light
+			stroke-width 2px
+
+		.path--bg
+			display none
+
+	.laugh--haha
+		.path--fg
+			stroke $c-ha
+
+	.laugh--lmao
+		.path--fg
+			stroke $c-acronym
+
+	.g-axis
+		path
+			display none
+
+	.axis--x
+		line
+			display none
+
+	.axis--y
+		line
+			stroke-opacity 0.25
+			stroke-dasharray 4px 4px

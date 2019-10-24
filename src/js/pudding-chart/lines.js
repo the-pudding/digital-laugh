@@ -15,9 +15,9 @@ d3.selection.prototype.puddingChartLine = function init(options) {
     // dimension stuff
     let width = 0;
     let height = 0;
-    const marginTop = 32;
+    const marginTop = 24;
     const marginBottom = 32;
-    const marginLeft = 32;
+    const marginLeft = 64;
     const marginRight = 32;
 
     // scales
@@ -28,17 +28,33 @@ d3.selection.prototype.puddingChartLine = function init(options) {
     let $svg = null;
     let $axis = null;
     let $vis = null;
+    let $defs = null;
+
+    const STROKE_W = 8;
+    const STROKE_W_LOL = 24;
 
     // helper functions
+    function slugify(str) {
+      return str.replace(/\s/g, '-');
+    }
+
     function enter(sel) {
       const $g = sel.append('g');
-      $g.attr('class', 'laugh');
-      $g.append('path');
+      $g.attr('class', d => `laugh laugh--${slugify(d.key)}`);
+
+      $g.each(d => {
+        $defs.append('path').attr('id', `text-path--${slugify(d.key)}`);
+      });
+
+      $g.append('path').attr('class', 'path--bg');
+      $g.append('path').attr('class', 'path--fg');
       $g.append('text')
-        .text(d => d.key)
-        .attr('text-anchor', 'end')
-        .attr('x', 0)
-        .attr('y', 0);
+        .append('textPath')
+        .attr('xlink:href', d => `#text-path--${slugify(d.key)}`)
+        .attr('startOffset', '100%')
+        .style('text-anchor', 'end')
+        .text(d => d.key);
+
       return $g;
     }
 
@@ -46,16 +62,17 @@ d3.selection.prototype.puddingChartLine = function init(options) {
       // called once at start
       init() {
         $svg = $sel.append('svg').attr('class', 'pudding-chart');
-        const $g = $svg.append('g');
-
-        // offset chart for margins
-        $g.attr('transform', `translate(${marginLeft}, ${marginTop})`);
 
         // create axis
         $axis = $svg.append('g').attr('class', 'g-axis');
+        $axis.append('g').attr('class', 'axis--x');
+        $axis.append('g').attr('class', 'axis--y');
 
         // setup viz group
-        $vis = $g.append('g').attr('class', 'g-vis');
+        $vis = $svg.append('g').attr('class', 'g-vis');
+        $vis.attr('transform', `translate(${marginLeft}, ${marginTop})`);
+
+        $defs = $svg.append('defs');
 
         Chart.resize();
         Chart.render();
@@ -64,7 +81,7 @@ d3.selection.prototype.puddingChartLine = function init(options) {
       resize() {
         // defaults to grabbing dimensions from container element
         width = $sel.node().offsetWidth - marginLeft - marginRight;
-        height = Math.floor(width * 0.67) - marginTop - marginBottom;
+        height = $sel.node().offsetHeight - marginTop - marginBottom;
 
         $svg
           .attr('width', width + marginLeft + marginRight)
@@ -82,25 +99,40 @@ d3.selection.prototype.puddingChartLine = function init(options) {
           .key(d => d.id)
           .entries(data);
 
+        nested.sort((a, b) =>
+          d3.ascending(a.values[9].share, b.values[9].share)
+        );
+
         const extentX = d3.extent(data, d => d.year);
-        const extentY = [0, d3.max(data, d => d.share)];
-
-        // const stackData = d3
-        //   .nest()
-        //   .key(d => d.year)
-        //   .entries(data);a
-
-        // const series = d3
-        //   .stack()
-        //   .keys(nested.map(d => d.key))
-        //   .offset(d3.stackOffsetWiggle)
-        //   .order(d3.stackOrderInsideOut)(data);
+        const extentY = [0, d3.max(data, d => d.share) + 0.05];
 
         scaleX.domain(extentX);
         scaleY.domain(extentY);
 
+        const axisX = d3.axisBottom(scaleX).tickFormat(d3.format('.0f'));
+        $axis
+          .select('.axis--x')
+          .call(axisX)
+          .attr(
+            'transform',
+            `translate(${marginLeft}, ${height +
+              marginTop +
+              marginBottom * 0.25})`
+          );
+
+        const axisY = d3
+          .axisLeft(scaleY)
+          .tickFormat(d3.format('.0%'))
+          .ticks(5)
+          .tickSize(-width - marginLeft * 0.25);
+        $axis
+          .select('.axis--y')
+          .call(axisY)
+          .attr('transform', `translate(${marginLeft * 0.75}, ${marginTop})`);
+
         const line = d3
           .line()
+          .curve(d3.curveMonotoneX)
           .x(d => scaleX(d.year))
           .y(d => scaleY(d.share));
 
@@ -109,20 +141,21 @@ d3.selection.prototype.puddingChartLine = function init(options) {
           .data(nested, d => d.key)
           .join(enter);
 
-        $laugh
-          .select('path')
-          .datum(d => d.values)
-          .attr('d', line);
+        $laugh.classed('is-noise', d => d.values[9].share < 0.1);
 
-        $laugh
-          .select('text')
-          .attr(
-            'transform',
-            d =>
-              `translate(${scaleX(d.values[9].year)}, ${scaleY(
-                d.values[9].share
-              )})`
-          );
+        $laugh.selectAll('path').attr('d', d => line(d.values));
+
+        $laugh.each(d => {
+          d3.select(`#text-path--${slugify(d.key)}`)
+            .datum(d.values)
+            .attr('d', line);
+        });
+
+        $laugh.select('text').attr('transform', d => {
+          const y = d.key === 'lol' ? -STROKE_W_LOL : -STROKE_W;
+          const x = 0;
+          return `translate(${x},${y})`;
+        });
 
         return Chart;
       },
