@@ -224,7 +224,7 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
 
         $leafText
           .select('.text-id--bg')
-          .style('font-size', d => scaleF(d.data.share))
+          .style('font-size', d => `${Math.floor(scaleF(d.data.share))}px`)
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2)
           .attr('data-opacity', d =>
@@ -233,7 +233,7 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
 
         $leafText
           .select('.text-id--fg')
-          .style('font-size', d => scaleF(d.data.share))
+          .style('font-size', d => `${Math.floor(scaleF(d.data.share))}px`)
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2)
           .attr('data-opacity', d =>
@@ -244,7 +244,10 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
           .select('.text-share--bg')
           .style('font-size', '12px')
           .attr('x', d => (d.x1 - d.x0) / 2)
-          .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 4)
+          .attr(
+            'y',
+            d => (d.y1 - d.y0) / 2 + Math.floor(scaleF(d.data.share) * 0.5 + 4)
+          )
           .attr('data-opacity', d =>
             hideB.includes(d.data.id) ? 0 : d.data.share < 0.005 ? 0 : 1
           );
@@ -253,7 +256,10 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
           .select('.text-share--fg')
           .style('font-size', '12px')
           .attr('x', d => (d.x1 - d.x0) / 2)
-          .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 4)
+          .attr(
+            'y',
+            d => (d.y1 - d.y0) / 2 + Math.floor(scaleF(d.data.share) * 0.5 + 4)
+          )
           .attr('data-opacity', d =>
             hideB.includes(d.data.id) ? 0 : d.data.share < 0.005 ? 0 : 1
           );
@@ -262,7 +268,10 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
           .select('.text-count--bg')
           .style('font-size', '12px')
           .attr('x', d => (d.x1 - d.x0) / 2)
-          .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 20)
+          .attr(
+            'y',
+            d => (d.y1 - d.y0) / 2 + Math.floor(scaleF(d.data.share) * 0.5 + 20)
+          )
           .attr('data-opacity', d =>
             hideB.includes(d.data.id) ? 0 : d.data.share < 0.1 ? 0 : 1
           );
@@ -271,7 +280,10 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
           .select('.text-count--fg')
           .style('font-size', '12px')
           .attr('x', d => (d.x1 - d.x0) / 2)
-          .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 20)
+          .attr(
+            'y',
+            d => (d.y1 - d.y0) / 2 + Math.floor(scaleF(d.data.share) * 0.5 + 20)
+          )
           .attr('data-opacity', d =>
             hideB.includes(d.data.id) ? 0 : d.data.share < 0.1 ? 0 : 1
           );
