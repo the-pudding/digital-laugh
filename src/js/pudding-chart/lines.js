@@ -31,7 +31,7 @@ d3.selection.prototype.puddingChartLine = function init(options) {
     let $defs = null;
 
     const STROKE_W = 8;
-    const STROKE_W_LOL = 24;
+    const STROKE_W_LOL = 16;
 
     // helper functions
     function slugify(str) {
