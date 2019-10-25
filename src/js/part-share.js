@@ -47,7 +47,7 @@ function updateFigureDimensions() {
   const w = $section.node().offsetWidth;
   const ih = window.innerHeight * 0.9;
   const sz = Math.floor(Math.min(w, ih));
-  $figureLower.style('width', `${w}px`).style('height', `${ih}px`);
+  $figureLower.style('width', `${sz}px`).style('height', `${sz}px`);
 
   // const m = REM * 2;
   const o = $chartCase.select('.case__header').node().offsetHeight;

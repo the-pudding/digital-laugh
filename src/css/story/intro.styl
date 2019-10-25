@@ -1,4 +1,5 @@
 .intro
+	overflow hidden
 	margin-top 2.9rem
 	width 100%
 
@@ -20,7 +21,7 @@
 			font-family $mono
 
 			+mq('bp-5')
-				font-size 15vh
+				font-size 12.5vh
 
 		> *
 			position relative
@@ -33,6 +34,9 @@
 			display block
 			padding 0 1rem
 			transform translateY(-50%)
+
+			+mq('bp-5')
+				padding 0 2rem
 
 	&__prelude
 		margin 0 auto
@@ -71,13 +75,14 @@
 		font-weight 600
 		font-family $mono
 		grid-area 2 / 2 / 3 / 4
+		set-type-size(root, true)
 
 		+mq('bp-4')
 			grid-area 2 / 2 / 3 / 3
 
 		span
 			left 50%
-			width 17rem
+			width 15rem
 			transform translate(-50%, -50%)
 
 		a
