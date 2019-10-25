@@ -2,7 +2,7 @@
 	figure
 		margin 2rem auto
 		margin-top 0
-		padding 0 3rem
+		padding 0.5rem 3rem 0 3rem
 		min-height 320px
 
 	.case__header
@@ -32,18 +32,35 @@
 		font-weight 600
 
 		&:before
+			set-type-size(xx-small, false)
 			position absolute
-			top 0
+			top 50%
 			left 0
 			display inline-block
-			content '-'
+			content '- (higher share)'
+			transform translateY(-50%)
 
 		&:after
+			set-type-size(xx-small, false)
 			position absolute
-			top 0
+			top 50%
 			right 0
 			display inline-block
-			content '+'
+			content '(lower share) +'
+			transform translateY(-50%)
+
+	.slider
+		.noUi-pips
+			padding 8px
+			height 40px
+
+		.noUi-value
+			set-type-size(x-small, false)
+			color $gray-dark
+
+		.noUi-marker-horizontal
+			height 8px
+			background $gray-light
 
 	button
 		width 8rem

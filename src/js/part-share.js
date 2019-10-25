@@ -76,6 +76,13 @@ function setupSlider(data) {
     connect: false,
     direction: 'rtl',
     range: { min: [min], '50%': q2, '75%': q3, max: [max] },
+    pips: {
+      mode: 'range',
+      density: 100,
+      format: {
+        to: d => d3.format('.1%')(d / SLIDER_MULT),
+      },
+    },
   });
 
   slider.on('set', handleSliderSet);
