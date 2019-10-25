@@ -109,7 +109,10 @@ d3.selection.prototype.puddingChartLine = function init(options) {
         scaleX.domain(extentX);
         scaleY.domain(extentY);
 
-        const axisX = d3.axisBottom(scaleX).tickFormat(d3.format('.0f'));
+        const axisX = d3
+          .axisBottom(scaleX)
+          .tickFormat(d3.format('.0f'))
+          .ticks(width < 480 ? 5 : 10);
         $axis
           .select('.axis--x')
           .call(axisX)

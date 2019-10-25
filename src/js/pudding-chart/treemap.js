@@ -18,8 +18,8 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
     let height = 0;
     let marginTop = 24;
     let marginBottom = 24;
-    let marginLeft = 24;
-    let marginRight = 24;
+    let marginLeft = 32;
+    let marginRight = 32;
     const tile = 'treemapBinary';
     const customHide = [
       { w: 720, laughs: ['ha ha', 'bahaha', 'jaja'] },
