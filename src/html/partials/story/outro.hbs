@@ -1,26 +1,22 @@
 <section id='outro'>
 	<div class='prose'>
 		<p>{{{doc.more}}}</p>
-	</div>
-
-	<div class='parts'>
-		{{#each doc.parts}}
-			{{#if live}}{{else}}
-				<a class='is-{{live}}' href='#{{slug}}'>
-					<span class='part__index'>{{index}}</span>
-					<span class='part__title'>{{{title}}}</span>
-					<span class='part__release'>{{{release}}}</span>
-				</a>
-			{{/if}}
-		{{/each}}
-	</div>
-
-	<div class='prose'>
+		<div class='parts'>
+			{{#each doc.parts}}
+				{{#if live}}{{else}}
+					<a class='is-{{live}}' href='#{{slug}}'>
+						<span class='part__index'>{{index}}</span>
+						<span class='part__title'>{{{title}}}</span>
+						<span class='part__release'>{{{release}}}</span>
+					</a>
+				{{/if}}
+			{{/each}}
+		</div>
 		{{#each doc.notes}}
-		<p>{{{value}}}</p>
+			<p>{{{value}}}</p>
 		{{/each}}
 	</div>
-	
+
 </section>
 
 <section id='method'>
