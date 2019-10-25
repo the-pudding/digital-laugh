@@ -16,8 +16,11 @@
 			margin 0
 			vertical-align middle
 			font-weight 600
-			font-size 15vh
+			font-size 15vw
 			font-family $mono
+
+			+mq('bp-5')
+				font-size 15vh
 
 		> *
 			position relative
@@ -28,7 +31,7 @@
 			top 50%
 			left 0
 			display block
-			padding 0 2rem
+			padding 0 1rem
 			transform translateY(-50%)
 
 	&__prelude
@@ -67,7 +70,10 @@
 		background-color $red
 		font-weight 600
 		font-family $mono
-		grid-area 2 / 2 / 3 / 3
+		grid-area 2 / 2 / 3 / 4
+
+		+mq('bp-4')
+			grid-area 2 / 2 / 3 / 3
 
 		span
 			left 50%
@@ -86,4 +92,7 @@
 			transparent 8px,
 			transparent 32px
 		)
-		grid-area 2 / 3 / 4 / 3
+		grid-area 3 / 3 / 4 / 3
+
+		+mq('bp-4')
+			grid-area 2 / 3 / 4 / 3

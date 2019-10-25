@@ -7,11 +7,16 @@
 	svg
 		display block
 		margin 0 auto
+		cursor crosshair
 
 	text
 		font-weight 600
 		font-family $mono
+		pointer-events none
 		user-select none
+
+	.leaf.is-hidden
+		opacity 0.33
 
 	.text-id--bg
 		fill none
@@ -44,7 +49,6 @@
 		stroke-width 4px
 		stroke-width 2px
 		stroke $fg
-		// stroke $fg
 
 	.leaf--lol
 		rect
@@ -97,13 +101,16 @@
 
 		li
 			padding 0.5em
-			// text-transform uppercase
 			line-height 1
-			set-type-size(small, false)
-			width 6rem
+			set-type-size(x-small, false)
+			width 4rem
 			text-align center
 			font-weight 600
 			font-family $mono
+
+			+mq('bp-4')
+				width 6rem
+				set-type-size(small, false)
 
 		.key--lol
 			background-color $c-lol

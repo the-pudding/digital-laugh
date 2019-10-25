@@ -16,8 +16,12 @@ q
 		max-width $column-width
 		font-weight 600
 		font-family $mono
-		set-type-size(xxx-large, false)
+		set-type-size(x-large, true)
 		text-align center
+		line-height 1.2
+
+		+mq('bp-4')
+			set-type-size(xxx-large, true)
 
 		span
 			display block
@@ -73,7 +77,10 @@ q
 	p
 		margin-top 0
 		max-width none
-		set-type-size(x-large, true)
+		set-type-size(large, true)
+
+		+mq('bp-4')
+			set-type-size(x-large, true)
 
 .slider
 	margin 0 auto

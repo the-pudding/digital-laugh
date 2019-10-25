@@ -16,11 +16,12 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
     // dimension stuff
     let width = 0;
     let height = 0;
-    const marginTop = 24;
-    const marginBottom = 24;
-    const marginLeft = 24;
-    const marginRight = 24;
+    let marginTop = 24;
+    let marginBottom = 24;
+    let marginLeft = 24;
+    let marginRight = 24;
     const tile = 'treemapBinary';
+    const customHide = ['bahaha', 'jaja'];
 
     // scales
     const scaleF = d3.scalePow().exponent(0.5);
@@ -29,18 +30,46 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
     let $svg = null;
     let $vis = null;
 
-    const MIN_FONT_SIZE = 8;
+    const MIN_FONT_SIZE = 10;
 
     // helper functions
+    function resetTextOpacity() {
+      $vis
+        .selectAll('.leaf-text text')
+        .style('opacity', (v, i, n) => d3.select(n[i]).attr('data-opacity'));
+    }
+
+    function handleRectEnter(d) {
+      $vis.selectAll('.leaf-rect').classed('is-hidden', true);
+      d3.select(this).classed('is-hidden', false);
+
+      resetTextOpacity();
+      $vis
+        .selectAll('.leaf-text')
+        .classed('is-hidden', v => v.data.id !== d.data.id)
+        .each((v, i, n) => {
+          const $t = d3.select(n[i]);
+          if (v.data.id === d.data.id) {
+            $t.selectAll('.text-id').style('opacity', 1);
+            if (v.data.share >= 0.001)
+              $t.selectAll('.text-share').style('opacity', 1);
+            if (v.data.share >= 0.005)
+              $t.selectAll('.text-count').style('opacity', 1);
+          }
+        });
+    }
+    function handleRectOut() {
+      $vis.selectAll('.leaf').classed('is-hidden', false);
+    }
+    function handleSvgOut() {
+      console.log('svg out');
+    }
 
     const Chart = {
       // called once at start
       init() {
         $svg = $sel.append('svg').attr('class', 'pudding-chart');
         const $g = $svg.append('g');
-
-        // offset chart for margins
-        $g.attr('transform', `translate(${marginLeft}, ${marginTop})`);
 
         // setup viz group
         $vis = $g.append('g').attr('class', 'g-vis');
@@ -59,6 +88,11 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
 
         const maxF = Math.floor(sz * 0.125);
         const minF = Math.max(MIN_FONT_SIZE, Math.floor(maxF * 0.05));
+        marginTop = Math.min(24, minF * 2);
+        marginLeft = Math.min(24, minF * 2);
+        marginBottom = Math.min(24, minF * 2);
+        marginRight = Math.min(24, minF * 2);
+
         scaleF.domain(data.extent).range([minF, maxF]);
 
         $svg
@@ -69,6 +103,11 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
       },
       // update scales and render chart
       render() {
+        // offset chart for margins
+        $svg
+          .select('g')
+          .attr('transform', `translate(${marginLeft}, ${marginTop})`);
+
         const treemap = d3
           .treemap()
           .tile(d3[tile])
@@ -96,7 +135,9 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
             return $g;
           })
           .attr('transform', d => `translate(${d.x0},${d.y0})`)
-          .attr('class', d => `leaf leaf-rect leaf--${d.data.family}`);
+          .attr('class', d => `leaf leaf-rect leaf--${d.data.family}`)
+          .on('mouseenter', handleRectEnter)
+          .on('mouseout', handleRectOut);
 
         $leafRect
           .select('rect')
@@ -168,42 +209,48 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
           .style('font-size', d => scaleF(d.data.share))
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2)
-          .style('opacity', d => (d.data.share < 0.001 ? 0 : 1));
+          .attr('data-opacity', d =>
+            customHide.includes(d.data.id) ? 0 : d.data.share < 0.001 ? 0 : 1
+          );
 
         $leafText
           .select('.text-id--fg')
           .style('font-size', d => scaleF(d.data.share))
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2)
-          .style('opacity', d => (d.data.share < 0.001 ? 0 : 1));
+          .attr('data-opacity', d =>
+            customHide.includes(d.data.id) ? 0 : d.data.share < 0.001 ? 0 : 1
+          );
 
         $leafText
           .select('.text-share--bg')
           .style('font-size', '12px')
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 4)
-          .style('opacity', d => (d.data.share < 0.005 ? 0 : 1));
+          .attr('data-opacity', d => (d.data.share < 0.005 ? 0 : 1));
 
         $leafText
           .select('.text-share--fg')
           .style('font-size', '12px')
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 4)
-          .style('opacity', d => (d.data.share < 0.005 ? 0 : 1));
+          .attr('data-opacity', d => (d.data.share < 0.005 ? 0 : 1));
 
         $leafText
           .select('.text-count--bg')
           .style('font-size', '12px')
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 20)
-          .style('opacity', d => (d.data.share < 0.1 ? 0 : 1));
+          .attr('data-opacity', d => (d.data.share < 0.1 ? 0 : 1));
 
         $leafText
           .select('.text-count--fg')
           .style('font-size', '12px')
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2 + scaleF(d.data.share) * 0.5 + 20)
-          .style('opacity', d => (d.data.share < 0.1 ? 0 : 1));
+          .attr('data-opacity', d => (d.data.share < 0.1 ? 0 : 1));
+
+        resetTextOpacity();
 
         return Chart;
       },
