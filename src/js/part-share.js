@@ -19,6 +19,7 @@ const $chartLower = $content.select('.chart-lower');
 const $chartCase = $content.select('.chart-case');
 const $figureLower = $chartLower.select('figure');
 const $figureCase = $chartCase.select('figure');
+const $tableLower = $chartLower.select('table');
 const $slider = $chartCase.select('.slider');
 
 function updateCase({ thresh, animate }) {
@@ -27,6 +28,14 @@ function updateCase({ thresh, animate }) {
     .data(data)
     .resize()
     .render(animate);
+}
+
+function handleToggleTable() {
+  const h = $tableLower.classed('is-hidden');
+  $tableLower.classed('is-hidden', !h);
+  $chartLower
+    .select('.lower__note span')
+    .text(h ? 'Hide details.' : 'Show details.');
 }
 
 function handleToggleClick() {
@@ -99,6 +108,51 @@ function setupCase() {
   setupToggle();
 }
 
+function setupTable() {
+  const COLUMNS = [
+    { title: 'Laugh', prop: 'id' },
+    // { title: 'Family', prop: 'family' },
+    { title: 'Matching', prop: 'description' },
+    { title: 'Share', prop: 'sumShare' },
+    { title: 'Count', prop: 'sumCount' },
+  ];
+
+  const getRowData = d =>
+    COLUMNS.map(c => ({ prop: c.prop, value: d[c.prop], title: c.title }));
+
+  $tableLower
+    .select('thead')
+    .append('tr')
+    .selectAll('th')
+    .data(COLUMNS)
+    .join(enter => enter.append('th').attr('class', d => `th--${d.prop}`))
+    .text(d => d.title);
+
+  const $row = $tableLower
+    .select('tbody')
+    .selectAll('tr')
+    .data(nestedData)
+    .join('tr')
+    .attr('class', d => `laugh--${d.family}`);
+
+  $row
+    .selectAll('td')
+    .data(getRowData)
+    .join(enter => enter.append('td').attr('class', d => `td--${d.prop}`))
+    .html(d => {
+      if (d.prop === 'sumShare') return d3.format('.2%')(d.value);
+      if (d.prop === 'sumCount') return d3.format('.2s')(d.value);
+      if (d.prop === 'description') {
+        const f = d.value.replace(/"/, '<strong>');
+        const e = f.replace(/"/, '</strong>');
+        return e;
+      }
+      return d.value;
+    });
+
+  $chartLower.select('.lower__note span').on('click', handleToggleTable);
+}
+
 function setupLower() {
   const byFamily = d3
     .nest()
@@ -113,12 +167,14 @@ function setupLower() {
 
   const treeData = { name: 'all', children: byFamily, extent };
   chartLower = $figureLower.datum(treeData).puddingChartTreeMap();
+  setupTable();
 }
 
 function setup(data) {
   const shareData = data.map(d => ({
     id: d.id,
     family: d.family,
+    description: d.description || 'exact',
     count: +d.count_2019,
     share: +d.share_2019,
   }));
@@ -141,6 +197,7 @@ function setup(data) {
       return {
         id: values[0].id.toLowerCase(),
         family: values[0].family,
+        description: values[0].description,
         sumShare,
         sumCount,
         laughs,

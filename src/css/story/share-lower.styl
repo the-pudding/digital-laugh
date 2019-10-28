@@ -134,3 +134,56 @@
 		margin 0 auto
 		padding 0 1rem
 		max-width $column-width
+
+		span
+			border-bottom 1px solid currentColor
+			cursor pointer
+
+	.lower__table
+		padding 1rem
+
+	table
+		margin 0 auto
+		max-width 40rem
+		width 100%
+
+		&.is-hidden
+			display none
+
+		td, th
+			set-type-size(x-small, false)
+			padding 0.5em
+			border-bottom 1px solid $gray-light
+			font-family $mono
+			line-height 1
+
+			+mq('bp-4')
+				set-type-size(small, false)
+
+		tr.laugh--lol
+			background-color rgba($c-lol, 0.33)
+
+		tr.laugh--ha
+			background-color rgba($c-ha, 0.33)
+
+		tr.laugh--acronym
+			background-color rgba($c-acronym, 0.33)
+
+		tr.laugh--text
+			background-color rgba($c-text, 0.33)
+
+		tr.laugh--other
+			background-color rgba($c-other, 0.33)
+
+		th
+			text-transform uppercase
+			font-weight 600
+
+		.td--sumShare, .td--sumCount, .th--sumShare, .th--sumCount
+			text-align right
+
+		.td--sumCount, .th--sumCount
+			display none
+
+			+mq('bp-4')
+				display table-cell
