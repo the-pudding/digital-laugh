@@ -11,7 +11,7 @@
 			top 24%
 			left 30%
 			width 8vh
-			transform rotate(-4.5deg)
+			transform rotate(-10deg)
 			transform-origin 50% 100%
 
 	path
@@ -30,6 +30,29 @@
 		font-weight 600
 		font-family $mono
 
+	.laugh.is-noise
+		text
+			opacity 0
+
+		.path--fg
+			stroke $gray-light
+			stroke-width 2px
+
+		.path--bg
+			opacity 0
+
+	// .laugh.is-prenoise
+	// text
+	// opacity 1
+
+	// .path--bg
+	// opacity 1
+	// stroke $fg
+	// stroke-width 4px
+
+	// .path--fg
+	// stroke $c-ha
+	// stroke-width 2px
 	.laugh--lol
 		.path--bg
 			stroke $fg
@@ -42,17 +65,6 @@
 		text
 			set-type-size(xxxx-large, false)
 
-	.laugh.is-noise
-		text
-			display none
-
-		.path--fg
-			stroke $gray-light
-			stroke-width 2px
-
-		.path--bg
-			display none
-
 	.laugh--haha
 		.path--fg
 			stroke $c-ha
@@ -64,6 +76,10 @@
 	.g-axis
 		path
 			display none
+
+		text
+			font-size 12px
+			fill $gray-dark
 
 	.axis--x
 		line

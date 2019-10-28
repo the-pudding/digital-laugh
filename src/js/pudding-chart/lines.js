@@ -145,6 +145,10 @@ d3.selection.prototype.puddingChartLine = function init(options) {
           .join(enter);
 
         $laugh.classed('is-noise', d => d.values[9].share < 0.1);
+        $laugh.classed(
+          'is-prenoise',
+          d => d.values[0].share >= 0.095 && d.values[0].share < 0.2
+        );
 
         $laugh.selectAll('path').attr('d', d => line(d.values));
 

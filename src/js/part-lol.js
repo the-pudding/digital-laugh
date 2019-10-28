@@ -18,6 +18,7 @@ function setup(data) {
 
   // console.log(data);
   const clean = data
+    .slice(0, 20)
     .filter(d => d.count_2009)
     .map(d => {
       const o = { ...d };
