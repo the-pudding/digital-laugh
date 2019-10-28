@@ -12,7 +12,7 @@
 
 		p:last-of-type
 			display none
-			color $primary
+			// color $purple
 
 		&.is-answering
 			p:first-of-type
@@ -60,11 +60,14 @@
 				pointer-events none
 
 				button
-					background-color $primary
+					background-color $fg
 					color $white
 
 					&:before
-						background linear-gradient(to bottom, $primary 0%, $primary 100%)
+						background linear-gradient(to bottom, $fg 0%, $fg 100%)
+
+					&:after
+						background $white
 
 		button
 			position relative
@@ -72,32 +75,36 @@
 
 			&:before
 				position absolute
-				right -8px
 				bottom 0
+				left -4px
 				z-index 0
 				width 16px
 				height 8px
-				border-bottom-left-radius 8px
-				background linear-gradient(to bottom, $white 0%, $white 100%)
+				border-bottom-right-radius 8px
+				background linear-gradient(to bottom, $bg 0%, $bg 100%)
 				background-attachment fixed
 				content ''
 
 			&:after
 				position absolute
-				right -10px
 				bottom 0
+				left -12px
 				z-index 1
 				width 12px
-				height 8px
-				border-bottom-left-radius 8px
-				background $bg
+				height 9px
+				border-bottom-right-radius 8px
+				background $white
 				content ''
 
 			&:hover
-				background-color $secondary
+				background-color $fg
+				color $white
 
 				&:before
-					background linear-gradient(to bottom, $secondary 0%, $secondary 100%)
+					background linear-gradient(to bottom, $fg 0%, $fg 100%)
+
+				&:after
+					background $white
 
 	.content__scale
 		&.is-disabled
@@ -113,8 +120,9 @@
 		li
 			padding 0 0.5rem
 			width 20%
-			color darken($bg, 35)
+			color $gray-dark
 			text-align center
+			font-weight 600
 			font-family $mono
 			user-select none
 
@@ -169,7 +177,6 @@
 			set-type-size(x-large, false)
 			visibility visible
 			padding 0.5em 2em
-			border-radius 32px
 
 			&.is-hidden
 				visibility hidden
