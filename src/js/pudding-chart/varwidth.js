@@ -97,7 +97,7 @@ d3.selection.prototype.puddingChartVarWidth = function init(options) {
 
     function showStripe(d) {
       const h = (d.sumCount / d.countTotal) * height;
-      return h >= MIN_H * 0.5;
+      return h >= MIN_H * 0.25;
     }
 
     function sort(a, b) {

@@ -22,18 +22,10 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
     let marginRight = 32;
     const tile = 'treemapBinary';
     const customHide = [
-      { w: 720, laughs: ['ha ha', 'bahaha', 'jaja'] },
+      { w: 640, laughs: ['hahah', 'jaja'] },
       {
         w: 0,
-        laughs: [
-          'haahahha',
-          'ha ha',
-          'bahaha',
-          'hah',
-          'hahah',
-          'hehehe',
-          'jaja',
-        ],
+        laughs: ['haahahha', 'ha', 'ha ha', 'hahah', 'hehehe', 'jaja'],
       },
     ];
 
@@ -65,9 +57,9 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
           const $t = d3.select(n[i]);
           if (v.data.id === d.data.id) {
             $t.selectAll('.text-id').style('opacity', 1);
-            if (v.data.share >= 0.001)
+            if (v.data.sumShare >= 0.001)
               $t.selectAll('.text-share').style('opacity', 1);
-            if (v.data.share >= 0.005)
+            if (v.data.sumShare >= 0.005)
               $t.selectAll('.text-count').style('opacity', 1);
           }
         });
@@ -130,8 +122,8 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
 
         const hiearchy = d3
           .hierarchy(data)
-          .sum(d => d.count)
-          .sort((a, b) => b.count - a.count);
+          .sum(d => d.sumCount)
+          .sort((a, b) => b.sumCount - a.sumCount);
 
         const root = treemap(hiearchy);
 
@@ -183,7 +175,7 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
               .attr('class', 'text-share text-share--bg')
               .text(d => {
                 const pre = d.data.id === 'lol' ? 'laugh share: ' : '';
-                return `${pre}${d3.format('.1%')(d.data.share)}`;
+                return `${pre}${d3.format('.1%')(d.data.sumShare)}`;
               })
               .attr('text-anchor', 'middle')
               .attr('alignment-baseline', 'hanging');
@@ -192,7 +184,7 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
               .attr('class', 'text-share text-share--fg')
               .text(d => {
                 const pre = d.data.id === 'lol' ? 'laugh share: ' : '';
-                return `${pre}${d3.format('.1%')(d.data.share)}`;
+                return `${pre}${d3.format('.1%')(d.data.sumShare)}`;
               })
               .attr('text-anchor', 'middle')
               .attr('alignment-baseline', 'hanging');
@@ -204,7 +196,7 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
               .text(d => {
                 const pre = d.data.id === 'lol' ? 'found in ' : '';
                 const post = d.data.id === 'lol' ? ' comments' : '';
-                return `${pre}${d3.format(',')(d.data.count)}${post}`;
+                return `${pre}${d3.format(',')(d.data.sumCount)}${post}`;
               });
 
             $g.append('text')
@@ -214,7 +206,7 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
               .text(d => {
                 const pre = d.data.id === 'lol' ? 'found in ' : '';
                 const post = d.data.id === 'lol' ? ' comments' : '';
-                return `${pre}${d3.format(',')(d.data.count)}${post}`;
+                return `${pre}${d3.format(',')(d.data.sumCount)}${post}`;
               });
 
             return $g;
@@ -224,20 +216,20 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
 
         $leafText
           .select('.text-id--bg')
-          .style('font-size', d => `${Math.floor(scaleF(d.data.share))}px`)
+          .style('font-size', d => `${Math.floor(scaleF(d.data.sumShare))}px`)
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2)
           .attr('data-opacity', d =>
-            hideB.includes(d.data.id) ? 0 : d.data.share < 0.001 ? 0 : 1
+            hideB.includes(d.data.id) ? 0 : d.data.sumShare < 0.001 ? 0 : 1
           );
 
         $leafText
           .select('.text-id--fg')
-          .style('font-size', d => `${Math.floor(scaleF(d.data.share))}px`)
+          .style('font-size', d => `${Math.floor(scaleF(d.data.sumShare))}px`)
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr('y', d => (d.y1 - d.y0) / 2)
           .attr('data-opacity', d =>
-            hideB.includes(d.data.id) ? 0 : d.data.share < 0.001 ? 0 : 1
+            hideB.includes(d.data.id) ? 0 : d.data.sumShare < 0.001 ? 0 : 1
           );
 
         $leafText
@@ -246,10 +238,11 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr(
             'y',
-            d => (d.y1 - d.y0) / 2 + Math.floor(scaleF(d.data.share) * 0.5 + 4)
+            d =>
+              (d.y1 - d.y0) / 2 + Math.floor(scaleF(d.data.sumShare) * 0.5 + 4)
           )
           .attr('data-opacity', d =>
-            hideB.includes(d.data.id) ? 0 : d.data.share < 0.005 ? 0 : 1
+            hideB.includes(d.data.id) ? 0 : d.data.sumShare < 0.005 ? 0 : 1
           );
 
         $leafText
@@ -258,10 +251,11 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr(
             'y',
-            d => (d.y1 - d.y0) / 2 + Math.floor(scaleF(d.data.share) * 0.5 + 4)
+            d =>
+              (d.y1 - d.y0) / 2 + Math.floor(scaleF(d.data.sumShare) * 0.5 + 4)
           )
           .attr('data-opacity', d =>
-            hideB.includes(d.data.id) ? 0 : d.data.share < 0.005 ? 0 : 1
+            hideB.includes(d.data.id) ? 0 : d.data.sumShare < 0.005 ? 0 : 1
           );
 
         $leafText
@@ -270,10 +264,11 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr(
             'y',
-            d => (d.y1 - d.y0) / 2 + Math.floor(scaleF(d.data.share) * 0.5 + 20)
+            d =>
+              (d.y1 - d.y0) / 2 + Math.floor(scaleF(d.data.sumShare) * 0.5 + 20)
           )
           .attr('data-opacity', d =>
-            hideB.includes(d.data.id) ? 0 : d.data.share < 0.1 ? 0 : 1
+            hideB.includes(d.data.id) ? 0 : d.data.sumShare < 0.1 ? 0 : 1
           );
 
         $leafText
@@ -282,10 +277,11 @@ d3.selection.prototype.puddingChartTreeMap = function init(options) {
           .attr('x', d => (d.x1 - d.x0) / 2)
           .attr(
             'y',
-            d => (d.y1 - d.y0) / 2 + Math.floor(scaleF(d.data.share) * 0.5 + 20)
+            d =>
+              (d.y1 - d.y0) / 2 + Math.floor(scaleF(d.data.sumShare) * 0.5 + 20)
           )
           .attr('data-opacity', d =>
-            hideB.includes(d.data.id) ? 0 : d.data.share < 0.1 ? 0 : 1
+            hideB.includes(d.data.id) ? 0 : d.data.sumShare < 0.1 ? 0 : 1
           );
 
         resetTextOpacity();

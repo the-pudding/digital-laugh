@@ -8,7 +8,6 @@ import puddingChartVarWidth from './pudding-chart/varwidth';
 const REM = 16;
 const MIN_SHARE = 0.0001;
 const SLIDER_MULT = 1000;
-let shareData = [];
 let nestedData = [];
 let chartLower = null;
 let chartCase = null;
@@ -59,16 +58,16 @@ function resize() {
   if ($content.size()) {
     updateFigureDimensions();
     chartLower.resize().render();
-    // chartCase.resize();
+    chartCase.resize().render();
   }
 }
 
-function setupSlider(data) {
-  const l = data.length;
-  const max = data[0].sumShare * SLIDER_MULT;
-  const min = data[Math.floor(l * 0.8)].sumShare * SLIDER_MULT;
-  const q3 = data[Math.floor(l * 0.2)].sumShare * SLIDER_MULT;
-  const q2 = data[Math.floor(l * 0.4)].sumShare * SLIDER_MULT;
+function setupSlider() {
+  const l = nestedData.length;
+  const max = nestedData[0].sumShare * SLIDER_MULT;
+  const min = nestedData[Math.floor(l * 0.8)].sumShare * SLIDER_MULT;
+  const q3 = nestedData[Math.floor(l * 0.2)].sumShare * SLIDER_MULT;
+  const q2 = nestedData[Math.floor(l * 0.4)].sumShare * SLIDER_MULT;
   const start = max;
 
   slider = noUiSlider.create($slider.node(), {
@@ -93,8 +92,31 @@ function setupToggle() {
   $chartCase.selectAll('.header__toggle button').on('click', handleToggleClick);
 }
 
-function setupCase(data) {
-  shareData = data.map(d => ({
+function setupCase() {
+  chartCase = $figureCase.datum(nestedData).puddingChartVarWidth();
+
+  setupSlider();
+  setupToggle();
+}
+
+function setupLower() {
+  const byFamily = d3
+    .nest()
+    .key(d => d.family)
+    .entries(nestedData)
+    .map(d => ({
+      name: d.key,
+      children: d.values,
+    }));
+
+  const extent = d3.extent(nestedData, d => d.sumShare);
+
+  const treeData = { name: 'all', children: byFamily, extent };
+  chartLower = $figureLower.datum(treeData).puddingChartTreeMap();
+}
+
+function setup(data) {
+  const shareData = data.map(d => ({
     id: d.id,
     family: d.family,
     count: +d.count_2019,
@@ -118,6 +140,7 @@ function setupCase(data) {
 
       return {
         id: values[0].id.toLowerCase(),
+        family: values[0].family,
         sumShare,
         sumCount,
         laughs,
@@ -129,46 +152,15 @@ function setupCase(data) {
 
   nestedData.sort((a, b) => d3.descending(a.sumShare, b.sumShare));
 
-  chartCase = $figureCase.datum(nestedData).puddingChartVarWidth();
-
-  setupSlider(nestedData);
-  setupToggle();
-}
-
-function setupLower(data) {
-  const clean = data
-    .map(d => ({
-      ...d,
-      count: +d.count_2019,
-      share: +d.share_2019,
-    }))
-    .filter(d => d.share >= MIN_SHARE);
-
-  const nested = d3
-    .nest()
-    .key(d => d.family)
-    .entries(clean)
-    .map(d => ({
-      name: d.key,
-      children: d.values,
-    }));
-
-  const extent = d3.extent(clean, d => d.share);
-
-  const treeData = { name: 'all', children: nested, extent };
-  chartLower = $figureLower.datum(treeData).puddingChartTreeMap();
-}
-
-function setup([all, lower]) {
-  setupLower(lower);
-  setupCase(all);
+  setupLower();
+  setupCase();
 }
 
 function init() {
   if ($content.size()) {
     updateFigureDimensions();
 
-    loadData(['share--all.csv', 'share--case-insensitive.csv'])
+    loadData('share--all.csv')
       .then(setup)
       .catch(console.log);
   }

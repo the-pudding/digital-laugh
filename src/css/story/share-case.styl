@@ -18,18 +18,24 @@
 
 	.header__slider
 		margin 0 auto
-		min-width 10rem
-		width 25%
+		max-width 22rem
+		width 90%
 
 	.slider-label
 		margin 1rem auto
-		min-width 10rem
-		width 25%
+		max-width 22rem
+		width 90%
 		text-align center
 		text-transform uppercase
 		set-type-size(small, false)
 		position relative
 		font-weight 600
+
+		span
+			display none
+
+			+mq('bp-4')
+				display inline
 
 		&:before
 			set-type-size(xx-small, false)
@@ -199,7 +205,7 @@
 				font-size 12px
 
 		.upper
-			background $fg
+			background $white
 
 			.share
 				right 0
@@ -222,6 +228,7 @@
 			p
 				display block
 				color $fg
+				line-height 1
 				opacity 0
 				transition opacity 250ms ease-in-out
 
