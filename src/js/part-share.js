@@ -128,10 +128,15 @@ function setupTable() {
     .join(enter => enter.append('th').attr('class', d => `th--${d.prop}`))
     .text(d => d.title);
 
+  const data = nestedData.map(d => ({ ...d }));
+  data.sort(
+    (a, b) => d3.ascending(a.family, b.family) || d3.ascending(a.id, b.id)
+  );
+
   const $row = $tableLower
     .select('tbody')
     .selectAll('tr')
-    .data(nestedData)
+    .data(data)
     .join('tr')
     .attr('class', d => `laugh--${d.family}`);
 
