@@ -12,6 +12,7 @@ const $termLi = $terms.selectAll('.content__terms li');
 const $slider = $content.select('.content__slider');
 const $scale = $content.select('.content__scale');
 const $figure = $content.select('.content__figure');
+const $figureInner = $figure.select('.figure__inner');
 const $nav = $content.select('.content__nav');
 
 const $submitButton = $nav.select('.btn--submit');
@@ -180,15 +181,21 @@ function setupDB() {
   // db.finish();
 }
 
+function addFamily(data) {
+  return data.map(d => ({
+    ...d,
+    family: 'ha',
+  }));
+}
+
 function setupResults() {
   // create the charts
-  chart = $figure.puddingChartRidgeline();
+  chart = $figureInner.puddingChartRidgeline();
 
   d3.json(RESULTS_URL)
     .then(raw => {
       console.log(raw.updated);
-      resultsData = raw.results;
-
+      resultsData = addFamily(raw.results);
       chart
         .data(resultsData)
         .resize()

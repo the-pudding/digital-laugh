@@ -29,7 +29,9 @@
 
 	.content__figure
 		margin 0 auto
+		padding 1rem
 		max-width $column-width
+		border 8px solid $fg
 		opacity 0
 
 		&.is-visible
@@ -41,7 +43,7 @@
 		flex-wrap wrap
 		margin 0 auto
 		padding 2rem 0
-		max-width 50rem
+		max-width 42rem
 
 		li
 			position relative
@@ -71,7 +73,13 @@
 
 		button
 			position relative
+			border-radius 4px
+			background-color $gray-light
 			text-transform none
+			set-type-size(small, false)
+
+			+mq('bp-4')
+				set-type-size(root, false)
 
 			&:before
 				position absolute
@@ -81,7 +89,7 @@
 				width 16px
 				height 8px
 				border-bottom-right-radius 8px
-				background linear-gradient(to bottom, $bg 0%, $bg 100%)
+				background linear-gradient(to bottom, $gray-light 0%, $gray-light 100%)
 				background-attachment fixed
 				content ''
 
@@ -105,6 +113,9 @@
 
 				&:after
 					background $white
+
+	.content__slider
+		max-width $perception-width
 
 	.content__scale
 		&.is-disabled
@@ -173,10 +184,10 @@
 				cursor not-allowed
 
 		.btn--submit
-			text-transform uppercase
-			set-type-size(x-large, false)
+			// set-type-size(x-large, false)
 			visibility visible
 			padding 0.5em 2em
+			text-transform uppercase
 
 			&.is-hidden
 				visibility hidden
@@ -207,17 +218,32 @@
 
 		.term .path--area
 			stroke none
-			fill-opacity 0.75
-			// fill $primary
+			fill-opacity 1
 
 		.term .path--line
-			stroke $bg
+			stroke $fg
 			stroke-width 2px
+			stroke-opacity 0
 			fill none
 
 		.term .baseline
 			stroke-width 2px
 			stroke $fg
+
+		.family--lol
+			fill $c-lol
+
+		.family--ha
+			fill $c-ha
+
+		.family--acronym
+			fill $c-acronym
+
+		.family--text
+			fill $c-text
+
+		.family--other
+			fill $c-other
 
 		text
 			fill $fg
@@ -227,6 +253,7 @@
 	figure .axis
 		display flex
 		justify-content space-between
+		align-items center
 		// background-color $green-dark
 		padding-top 1rem
 		font-family $mono
@@ -239,6 +266,12 @@
 			width 50%
 			color $fg
 			line-height 1
+
+			&:nth-of-type(2)
+				set-type-size(large, false)
+				text-align center
+				text-transform uppercase
+				font-weight 600
 
 			&:last-of-type
 				text-align right

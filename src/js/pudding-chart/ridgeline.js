@@ -40,20 +40,9 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
     let $svg = null;
     let $axis = null;
     let $vis = null;
-    let $linearGradient = null;
-
-    let gradientID = null;
     let chartHeight = 0;
 
     // helper functions
-    function setupGradient() {
-      gradientID = `gradient-${generateID({ numbers: false })}`;
-
-      $linearGradient = $svg
-        .append('linearGradient')
-        .attr('id', gradientID)
-        .attr('gradientUnits', 'userSpaceOnUse');
-    }
 
     function getSortVal(key) {
       if (key === term) return 0;
@@ -66,11 +55,10 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
       init() {
         $axis = $sel.append('div').attr('class', 'axis');
         $axis.append('p').html('&lt; Less Funny');
+        $axis.append('p').html('Results');
         $axis.append('p').html('More Funny &gt;');
 
         $svg = $sel.append('svg').attr('class', 'pudding-chart');
-
-        setupGradient();
 
         const $g = $svg.append('g');
 
@@ -100,19 +88,6 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
           .attr('width', width + marginLeft + marginRight)
           .attr('height', height + marginTop + marginBottom);
 
-        $linearGradient
-          .attr('x1', 0)
-          .attr('y1', 0)
-          .attr('x2', width)
-          .attr('y2', 0);
-
-        $linearGradient
-          .selectAll('stop')
-          .data([{ offset: 0, color: ORANGE }, { offset: 1, color: YELLOW }])
-          .join('stop')
-          .attr('offset', d => d.offset)
-          .attr('stop-color', d => d.color);
-
         return Chart;
       },
       // update scales and render chart
@@ -138,7 +113,7 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
           .data(data)
           .join(enter => {
             const $t = enter.append('g').attr('class', 'term');
-            $t.append('path').attr('class', 'path--area');
+            $t.append('path').attr('class', d => `path--area family--${d.key}`);
             $t.append('path').attr('class', 'path--line');
             $t.append('line')
               .attr('class', 'baseline')
@@ -178,8 +153,7 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
         $sorted
           .select('.path--area')
           .datum(d => d.histogram)
-          .attr('d', generateArea)
-          .style('fill', `url(#${gradientID})`);
+          .attr('d', generateArea);
 
         $sorted
           .select('.path--line')
