@@ -51,8 +51,8 @@ d3.selection.prototype.puddingChartLine = function init(options) {
       $g.append('text')
         .append('textPath')
         .attr('xlink:href', d => `#text-path--${slugify(d.key)}`)
-        .attr('startOffset', '100%')
-        .style('text-anchor', 'end')
+        .attr('startOffset', d => (d.key === 'heh' ? '0%' : '100%'))
+        .style('text-anchor', d => (d.key === 'heh' ? 'start' : 'end'))
         .text(d => d.key);
 
       return $g;
@@ -99,8 +99,11 @@ d3.selection.prototype.puddingChartLine = function init(options) {
           .key(d => d.id)
           .entries(data);
 
-        nested.sort((a, b) =>
-          d3.ascending(a.values[9].share, b.values[9].share)
+        const special = ['lol', 'haha', 'lmao', 'ha', 'heh'];
+        nested.sort(
+          (a, b) =>
+            d3.ascending(special.includes(a.key), special.includes(b.key)) ||
+            d3.ascending(a.values[9].share, b.values[9].share)
         );
 
         const extentX = d3.extent(data, d => d.year);
@@ -147,7 +150,7 @@ d3.selection.prototype.puddingChartLine = function init(options) {
         $laugh.classed('is-noise', d => d.values[9].share < 0.1);
         $laugh.classed(
           'is-prenoise',
-          d => d.values[0].share >= 0.095 && d.values[0].share < 0.2
+          d => d.values[0].share >= 0.09 && d.values[0].share < 0.2
         );
 
         $laugh.selectAll('path').attr('d', d => line(d.values));
@@ -159,7 +162,9 @@ d3.selection.prototype.puddingChartLine = function init(options) {
         });
 
         $laugh.select('text').attr('transform', d => {
-          const y = d.key === 'lol' ? -STROKE_W_LOL : -STROKE_W;
+          let y = -STROKE_W;
+          if (d.key === 'lol') y = -STROKE_W_LOL;
+          if (d.key === 'heh') y = STROKE_W * 2.5;
           const x = 0;
           return `translate(${x},${y})`;
         });
