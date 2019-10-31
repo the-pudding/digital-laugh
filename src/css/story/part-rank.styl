@@ -138,6 +138,7 @@
 			user-select none
 
 			svg
+				max-width 10rem
 				opacity 0.33
 
 			&:nth-of-type(4) svg
@@ -181,7 +182,7 @@
 
 			&.is-disabled
 				opacity 0.33
-				cursor not-allowed
+				pointer-events none
 
 		.btn--submit
 			// set-type-size(x-large, false)
@@ -222,13 +223,14 @@
 
 		.term .path--line
 			stroke $fg
-			stroke-width 2px
-			stroke-opacity 0
+			stroke-width 3px
+			stroke-opacity 1
 			fill none
 
 		.term .baseline
-			stroke-width 2px
+			stroke-width 5px
 			stroke $fg
+			stroke-opacity 1
 
 		.family--lol
 			fill $c-lol

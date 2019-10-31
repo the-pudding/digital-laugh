@@ -99,7 +99,7 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
 
         scaleX.domain(valueExtent).range([0, width]);
 
-        scaleY.domain([0, maxCount]).range([MAX_HEIGHT - 10, 0]);
+        scaleY.domain([0, maxCount]).range([MAX_HEIGHT, 0]);
 
         generateLine.x(d => scaleX(d.value)).y(d => scaleY(d.count));
 
