@@ -1,6 +1,7 @@
 /* global d3 */
 import * as noUiSlider from 'nouislider';
 import MoveTo from 'moveto';
+import loadData from './load-data';
 import db from './db';
 import './pudding-chart/ridgeline';
 
@@ -37,6 +38,7 @@ let max = null;
 
 function resize() {
   if ($content.size()) {
+    chart.resize().render();
   }
 }
 
@@ -75,6 +77,7 @@ function handleSubmitClick() {
   $figure.classed('is-visible', true);
 
   $terms.select(`[data-term='${term}']`).classed('is-complete', true);
+  $slider.classed('is-disabled', true).attr('disabled', 'disabled');
 
   mt.move($spacer.node());
   db.update({ key: term, min, max });
@@ -135,8 +138,8 @@ function handleTermClick() {
 }
 
 function handleSlider([a, b]) {
-  min = Math.round(+a);
-  max = Math.round(+b);
+  min = +a;
+  max = +b;
   $scaleItem.classed('is-active', d => d >= min && d <= max);
 }
 
@@ -181,21 +184,34 @@ function setupDB() {
   // db.finish();
 }
 
-function addFamily(data) {
-  return data.map(d => ({
-    ...d,
-    family: 'ha',
-  }));
+function cleanData({ results, data }) {
+  return results
+    .map(d => {
+      const match = data.find(v => v.id === d.key);
+      const histogram = d.histogram.map(v => ({ ...v, value: +v.value }));
+
+      const post = { value: 5.05, count: 0 };
+      const pre = { value: 0.95, count: 0 };
+      histogram.push(post);
+      histogram.unshift(pre);
+
+      return {
+        ...d,
+        histogram,
+        family: match ? match.family : null,
+      };
+    })
+    .filter(d => d.family);
 }
 
-function setupResults() {
+function setupResults(data) {
   // create the charts
   chart = $figureInner.puddingChartRidgeline();
 
   d3.json(RESULTS_URL)
     .then(raw => {
       console.log(raw.updated);
-      resultsData = addFamily(raw.results);
+      resultsData = cleanData({ results: raw.results, data });
       chart
         .data(resultsData)
         .resize()
@@ -204,14 +220,20 @@ function setupResults() {
     .catch(console.error);
 }
 
+function setup(data) {
+  setupScale();
+  setupSlider();
+  setupTermButtons();
+  setupNavButtons();
+  setupDB();
+  setupResults(data);
+}
+
 function init() {
   if ($content.size()) {
-    setupScale();
-    setupSlider();
-    setupTermButtons();
-    setupNavButtons();
-    setupDB();
-    setupResults();
+    loadData('share--all.csv')
+      .then(setup)
+      .catch(console.error);
   }
 }
 

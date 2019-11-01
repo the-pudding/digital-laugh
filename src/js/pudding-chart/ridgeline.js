@@ -17,14 +17,13 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
     let data = $sel.datum() || [];
     let revealed = [];
     // dimension stuff
-    const MAX_HEIGHT = 96;
-    const OFFSET = 0.67;
-    const YELLOW = '#FFFA5D';
-    const ORANGE = '#FEA850';
+    const MAX_HEIGHT = 64;
+    const OFFSET = 1;
+    const TEXT_HEIGHT = 24;
 
     const marginTop = 32;
     const marginBottom = 32;
-    const marginLeft = 32;
+    const marginLeft = 84;
     const marginRight = 32;
     let width = 0;
     let height = 0;
@@ -82,7 +81,7 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
 
         chartHeight = MAX_HEIGHT;
         const numRidges = Math.max(0, data.length - 1);
-        height = chartHeight + numRidges * MAX_HEIGHT * OFFSET;
+        height = chartHeight + numRidges * (MAX_HEIGHT * OFFSET + TEXT_HEIGHT);
 
         $svg
           .attr('width', width + marginLeft + marginRight)
@@ -113,7 +112,10 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
           .data(data)
           .join(enter => {
             const $t = enter.append('g').attr('class', 'term');
-            $t.append('path').attr('class', d => `path--area family--${d.key}`);
+            $t.append('path').attr(
+              'class',
+              d => `path--area family--${d.family}`
+            );
             $t.append('path').attr('class', 'path--line');
             $t.append('line')
               .attr('class', 'baseline')
@@ -121,7 +123,8 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
             $t.append('text')
               .attr('x', 0)
               .attr('y', 0)
-              .attr('alignment-baseline', 'hanging');
+              .attr('text-anchor', 'end')
+              .attr('alignment-baseline', 'baseline');
 
             return $t;
           });
@@ -139,7 +142,7 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
           .ease(d3.easeCubicInOut)
           .attr(
             'transform',
-            (d, i) => `translate(0, ${i * MAX_HEIGHT * OFFSET})`
+            (d, i) => `translate(0, ${i * (MAX_HEIGHT * OFFSET + TEXT_HEIGHT)})`
           )
           .style('opacity', d => {
             if (term) {
@@ -169,7 +172,8 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
         $sorted
           .select('text')
           .text(d => d.key)
-          .attr('y', scaleY.range()[0] + 8);
+          .attr('x', -12)
+          .attr('y', scaleY.range()[0]);
 
         return Chart;
       },

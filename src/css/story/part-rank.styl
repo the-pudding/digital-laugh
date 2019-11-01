@@ -24,13 +24,14 @@
 		.instructions
 			set-type-size(medium, true)
 			text-align center
-			font-weight 700
+			font-weight 600
 			font-family $mono
 
 	.content__figure
 		margin 0 auto
 		padding 1rem
-		max-width $column-width
+		max-width 60rem
+		width 92.5%
 		border 8px solid $fg
 		opacity 0
 
@@ -42,7 +43,7 @@
 		display flex
 		flex-wrap wrap
 		margin 0 auto
-		padding 2rem 0
+		padding 2rem 1rem
 		max-width 42rem
 
 		li
@@ -129,13 +130,16 @@
 			max-width $perception-width
 
 		li
-			padding 0 0.5rem
+			padding 0 0.25rem
 			width 20%
 			color $gray-dark
 			text-align center
 			font-weight 600
 			font-family $mono
 			user-select none
+
+			+mq('bp-3')
+				padding 0 0.5rem
 
 			svg
 				max-width 10rem
@@ -156,10 +160,16 @@
 					opacity 1
 
 		span
-			display block
 			margin-top 0.5rem
-			set-type-size(x-small, false)
+			set-type-size(xxx-small, false)
+			display none
 			line-height 1.35
+
+			+mq('bp-2')
+				display block
+
+			+mq('bp-4')
+				set-type-size(x-small, false)
 
 	.content__nav
 		display flex
@@ -226,11 +236,13 @@
 			stroke-width 3px
 			stroke-opacity 1
 			fill none
+			stroke-linecap round
 
 		.term .baseline
 			stroke-width 5px
 			stroke $fg
 			stroke-opacity 1
+			stroke-linecap round
 
 		.family--lol
 			fill $c-lol
@@ -249,31 +261,38 @@
 
 		text
 			fill $fg
-			set-type-size(root, false)
-			font-weight 700
+			set-type-size(small, false)
+			font-weight 600
 
 	figure .axis
 		display flex
 		justify-content space-between
 		align-items center
+		margin-right 32px
+		margin-left 84px
 		// background-color $green-dark
 		padding-top 1rem
 		font-family $mono
 
 		p
 			margin 0
-			padding 0 2rem
-			set-type-size(small, false)
-			// text-align center
+			padding 0
+			set-type-size(xx-small, false)
 			width 50%
 			color $fg
 			line-height 1
 
+			+mq('bp-4')
+				set-type-size(small, false)
+
 			&:nth-of-type(2)
-				set-type-size(large, false)
+				set-type-size(medium, false)
 				text-align center
 				text-transform uppercase
 				font-weight 600
+
+				+mq('bp-4')
+					set-type-size(large, false)
 
 			&:last-of-type
 				text-align right
