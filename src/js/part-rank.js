@@ -19,6 +19,7 @@ const $nav = $content.select('.content__nav');
 const $submitButton = $nav.select('.btn--submit');
 const $anotherButton = $nav.select('.btn--another');
 const $skipButton = $nav.select('.btn--skip');
+const $sortButtons = $nav.select('.nav__sort');
 const $scaleItem = $scale.selectAll('.scale__item');
 const $spacer = $nav.select('.spacer');
 
@@ -35,6 +36,7 @@ let chart = null;
 let slider = null;
 let min = null;
 let max = null;
+let showAll = false;
 
 function resize() {
   if ($content.size()) {
@@ -70,21 +72,7 @@ function moveButton(el) {
     .style('transform', 'scale(2)');
 }
 
-function handleSubmitClick() {
-  $submitButton.classed('is-disabled', true);
-  const term = $submitButton.attr('data-term');
-  chart.reveal(term);
-  $figure.classed('is-visible', true);
-
-  $terms.select(`[data-term='${term}']`).classed('is-complete', true);
-  $slider.classed('is-disabled', true).attr('disabled', 'disabled');
-
-  mt.move($spacer.node());
-  db.update({ key: term, min, max });
-  // TODO all submitted
-}
-
-function handleAnotherClick() {
+function resetUI() {
   $termLi
     .style('transform', 'scale(1)')
     .style('top', 0)
@@ -98,21 +86,67 @@ function handleAnotherClick() {
   $submitButton.classed('is-hidden', true);
 
   slider.set([1, 5]);
-  $scaleItem.classed('is-active', false);
+}
 
+function updateFigureHeight() {
+  // 6 rem
+  const base = 8 * 16;
+  const h = showAll
+    ? 'auto'
+    : `${base + db.getAnswerCount() * chart.height()}px`;
+  $figure.style('height', `${h}`);
+}
+
+function handleSubmitClick() {
+  $submitButton.classed('is-disabled', true);
+  const term = $submitButton.attr('data-term');
+  chart.reveal({ term, min, max });
+  $figure.classed('is-visible', true);
+
+  $terms.select(`[data-term='${term}']`).classed('is-complete', true);
+
+  resetUI();
+
+  mt.move($spacer.node());
+  db.update({ key: term, min, max });
+
+  updateFigureHeight();
+  // TODO all submitted
+}
+
+function handleAnotherClick() {
+  resetUI();
   mt.move($content.node());
 }
 
 function handleSkipClick() {
+  showAll = true;
+
   const terms = [];
+
   $termLi.each((d, i, n) => {
     terms.push(d3.select(n[i]).text());
   });
+
+  min = null;
+  max = null;
   chart.all(terms);
-  $skipButton.classed('is-invisible', true);
+
+  $skipButton.classed('is-hidden', true);
+  $sortButtons.classed('is-visible', true);
   $figure.classed('is-visible', true);
 
   mt.move($spacer.node());
+
+  updateFigureHeight();
+}
+
+function handleSortClick() {
+  $sortButtons.selectAll('button').classed('is-active', false);
+  const $btn = d3.select(this);
+  $btn.classed('is-active', true);
+  const val = $btn.attr('data-sort');
+  chart.sort(val);
 }
 
 function handleTermClick() {
@@ -129,7 +163,12 @@ function handleTermClick() {
     .classed('is-disabled', false)
     .classed('is-hidden', false)
     .attr('data-term', term);
+
   $anotherButton.classed('is-disabled', false);
+
+  // $scaleItem.classed('is-active', true);
+
+  slider.set([1, 5]);
 
   min = null;
   max = null;
@@ -140,7 +179,10 @@ function handleTermClick() {
 function handleSlider([a, b]) {
   min = +a;
   max = +b;
-  $scaleItem.classed('is-active', d => d >= min && d <= max);
+  $scaleItem.classed(
+    'is-active',
+    d => d >= Math.round(min) && d <= Math.round(max)
+  );
 }
 
 function setupScale() {
@@ -172,32 +214,36 @@ function setupNavButtons() {
   $submitButton.on('click', handleSubmitClick);
   $anotherButton.on('click', handleAnotherClick);
   $skipButton.on('click', handleSkipClick);
+  $sortButtons.selectAll('button').on('click', handleSortClick);
 }
 
 function setupDB() {
   db.setup();
   const returner = db.getReturner();
   console.log({ returner });
-
-  // db.update({ key: 'ha', min: '4.05', max: '4.75' });
-  // db.setReturner();
-  // db.finish();
 }
 
 function cleanData({ results, data }) {
   return results
     .map(d => {
       const match = data.find(v => v.id === d.key);
-      const histogram = d.histogram.map(v => ({ ...v, value: +v.value }));
-
+      const histogram = d.histogram.map(v => ({
+        ...v,
+        value: +v.value,
+      }));
       const post = { value: 5.05, count: 0 };
       const pre = { value: 0.95, count: 0 };
       histogram.push(post);
       histogram.unshift(pre);
 
+      const count = d3.sum(histogram, v => v.count);
+      const total = d3.sum(histogram, v => v.count * v.value);
+      const mean = total / count;
+
       return {
         ...d,
         histogram,
+        mean,
         family: match ? match.family : null,
       };
     })

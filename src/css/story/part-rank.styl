@@ -28,10 +28,12 @@
 			font-family $mono
 
 	.content__figure
+		overflow hidden
 		margin 0 auto
 		padding 1rem
 		max-width 60rem
 		width 92.5%
+		height 6rem
 		border 8px solid $fg
 		opacity 0
 
@@ -186,6 +188,12 @@
 		.spacer
 			padding 1rem 0
 
+		.nav__sort
+			display none
+
+			&.is-visible
+				display block
+
 		button
 			margin 0
 			margin-bottom 0.5em
@@ -223,6 +231,19 @@
 		.btn--skip
 			font-weight 400
 
+		.btn--sort-funny, .btn--sort-alpha
+			background-color transparent
+			set-type-size(small, false)
+			padding-bottom 0.25em
+			text-transform none
+			font-weight 400
+
+			&.is-active
+				border-bottom 2px solid currentColor
+
+			&:hover
+				border-bottom 2px solid currentColor
+
 	.pudding-chart
 		display block
 		font-family $mono
@@ -243,6 +264,11 @@
 			stroke $fg
 			stroke-opacity 1
 			stroke-linecap round
+
+		.term circle
+			stroke-width 3px
+			stroke $fg
+			fill $bg
 
 		.family--lol
 			fill $c-lol

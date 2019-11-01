@@ -21,6 +21,10 @@ function getAnswer(id) {
   return null;
 }
 
+function getAnswerCount() {
+  return Object.keys(userData.answers).length;
+}
+
 function hasAnswers() {
   return !!Object.keys(userData.answers).length;
 }
@@ -140,5 +144,6 @@ export default {
   hasAnswers,
   setReturner,
   getReturner,
+  getAnswerCount,
   closeConnection,
 };

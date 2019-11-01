@@ -15,11 +15,13 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
   function createChart(el) {
     const $sel = d3.select(el);
     let data = $sel.datum() || [];
-    let revealed = [];
+    let revealedTerms = [];
+    const revealedValues = [];
     // dimension stuff
     const MAX_HEIGHT = 64;
     const OFFSET = 1;
     const TEXT_HEIGHT = 24;
+    const SLIDER_R = 6;
 
     const marginTop = 32;
     const marginBottom = 32;
@@ -27,7 +29,9 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
     const marginRight = 32;
     let width = 0;
     let height = 0;
-    let term = 'tbd';
+    let term = null;
+    let showAll = false;
+    let sortVal = 'mean';
 
     // scales
     const scaleX = d3.scaleLinear();
@@ -43,10 +47,13 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
 
     // helper functions
 
-    function getSortVal(key) {
-      if (key === term) return 0;
-      if (revealed.includes(key)) return 1;
-      return 2;
+    function getSortVal(d) {
+      if (term) {
+        if (d.key === term) return 2;
+        if (revealedTerms.includes(d.key)) return 1;
+        return 0;
+      }
+      return d[sortVal];
     }
 
     const Chart = {
@@ -109,7 +116,7 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
 
         const $term = $vis
           .selectAll('.term')
-          .data(data)
+          .data(data, d => d.key)
           .join(enter => {
             const $t = enter.append('g').attr('class', 'term');
             $t.append('path').attr(
@@ -120,19 +127,26 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
             $t.append('line')
               .attr('class', 'baseline')
               .attr('x1', 0);
+            $t.append('circle')
+              .attr('class', 'slider--min')
+              .attr('r', SLIDER_R);
+            $t.append('circle')
+              .attr('class', 'slider--max')
+              .attr('r', SLIDER_R);
             $t.append('text')
               .attr('x', 0)
               .attr('y', 0)
               .attr('text-anchor', 'end')
               .attr('alignment-baseline', 'baseline');
-
+            $t.style('opacity', 0);
             return $t;
           });
 
         const $sorted = $term.sort((a, b) => {
-          const aV = getSortVal(a.key);
-          const bV = getSortVal(b.key);
-          return d3.ascending(aV, bV);
+          const aV = getSortVal(a);
+          const bV = getSortVal(b);
+          if (sortVal === 'key') return d3.ascending(aV, bV);
+          return d3.descending(aV, bV);
         });
 
         $sorted
@@ -145,12 +159,10 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
             (d, i) => `translate(0, ${i * (MAX_HEIGHT * OFFSET + TEXT_HEIGHT)})`
           )
           .style('opacity', d => {
-            if (term) {
-              if (d.key === term) return 1;
-              if (revealed.includes(d.key)) return 0.5;
-              return 0;
-            }
-            return 1;
+            if (showAll) return 1;
+            if (d.key === term) return 1;
+            if (revealedTerms.includes(d.key)) return 0.5;
+            return 0;
           });
 
         $sorted
@@ -175,6 +187,22 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
           .attr('x', -12)
           .attr('y', scaleY.range()[0]);
 
+        $sorted
+          .selectAll('circle')
+          .attr('cy', scaleY.range()[0])
+          .style('opacity', d => (revealedTerms.includes(d.key) ? 1 : 0));
+
+        console.log(revealedValues);
+        $sorted.select('.slider--min').attr('cx', d => {
+          const match = revealedValues.find(v => v.term === d.key);
+          return scaleX(match ? match.min : 0);
+        });
+
+        $sorted.select('.slider--max').attr('cx', d => {
+          const match = revealedValues.find(v => v.term === d.key);
+          return scaleX(match ? match.max : 0);
+        });
+
         return Chart;
       },
       // get / set data
@@ -188,15 +216,26 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
       },
       reveal(val) {
         if (!arguments.length) return term;
-        term = val;
-        revealed.push(val);
+        term = val.term;
+        revealedTerms.push(val.term);
+        revealedValues.push(val);
         Chart.resize();
         Chart.render();
         return Chart;
       },
-      all(terms) {
+      all(val) {
         term = null;
-        revealed = uniq(revealed.concat(terms));
+        showAll = true;
+        revealedTerms = uniq(revealedTerms.concat(val));
+        Chart.resize();
+        Chart.render();
+        return Chart;
+      },
+      height() {
+        return MAX_HEIGHT + TEXT_HEIGHT;
+      },
+      sort(val) {
+        sortVal = val;
         Chart.resize();
         Chart.render();
         return Chart;
