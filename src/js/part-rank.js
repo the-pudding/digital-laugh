@@ -14,6 +14,7 @@ const $slider = $content.select('.content__slider');
 const $scale = $content.select('.content__scale');
 const $figure = $content.select('.content__figure');
 const $figureInner = $figure.select('.figure__inner');
+const $figureFooter = $content.select('.figure__footer');
 const $nav = $content.select('.content__nav');
 
 const $submitButton = $nav.select('.btn--submit');
@@ -108,6 +109,7 @@ function handleSubmitClick() {
     .resize()
     .render();
   $figure.classed('is-visible', true);
+  $figureFooter.classed('is-visible', true);
 
   $terms.select(`[data-term='${term}']`).classed('is-complete', true);
 
@@ -145,6 +147,7 @@ function handleSkipClick() {
   $skipButton.classed('is-hidden', true);
   $sortButtons.classed('is-visible', true);
   $figure.classed('is-visible', true);
+  $figureFooter.classed('is-visible', true);
 
   mt.move($spacer.node());
 
@@ -247,6 +250,7 @@ function setupDB() {
   if (answers.length) {
     chart.resize().render();
     $figure.classed('is-visible', true);
+    $figureFooter.classed('is-visible', true);
     updateFigureHeight();
   }
 
@@ -256,6 +260,7 @@ function setupDB() {
     $skipButton.classed('is-hidden', true);
     $sortButtons.classed('is-visible', true);
     $figure.classed('is-visible', true);
+    $figureFooter.classed('is-visible', true);
     updateFigureHeight();
   }
 }

@@ -334,6 +334,77 @@
 			&:last-of-type
 				text-align right
 
+	.figure__footer
+		display flex
+		visibility hidden
+		flex-wrap wrap
+		justify-content space-between
+		margin 0 auto
+		padding 1rem 0
+		max-width 60rem
+		width 92.5%
+
+		&.is-visible
+			visibility visible
+
+	.figure__legend
+		set-type-size(x-small, false)
+		padding 0.5rem 0
+		padding-right 1rem
+		font-weight 600
+		font-family $mono
+		line-height 1
+
+		+mq('bp-4')
+			set-type-size(small, false)
+
+		span
+			display inline-block
+			width 12px
+			height 12px
+			border 3px solid $fg
+			border-radius 6px
+
+	.figure__key
+		display flex
+		justify-content center
+		padding 0
+
+		li
+			padding 0.5rem
+			line-height 1
+			set-type-size(x-small, false)
+			width 4rem
+			text-align center
+			font-weight 600
+			font-family $mono
+
+			+mq('bp-4')
+				width 6rem
+				set-type-size(small, false)
+
+			&:first-of-type
+				display none
+
+				+mq('bp-4')
+					display block
+					padding-top 0.5rem
+
+		.key--lol
+			background-color $c-lol
+
+		.key--ha
+			background-color $c-ha
+
+		.key--acronym
+			background-color $c-acronym
+
+		.key--text
+			background-color $c-text
+
+		.key--other
+			background-color $c-other
+
 @keyframes waddle
 	0%
 		transform rotate(0)
