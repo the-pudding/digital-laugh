@@ -23,19 +23,24 @@
 
 		.instructions
 			set-type-size(medium, true)
+			padding 0 1rem
 			text-align center
 			font-weight 600
 			font-family $mono
+			line-height 1.2
 
 	.content__figure
 		overflow hidden
 		margin 0 auto
-		padding 1rem
+		padding 0.5rem
 		max-width 60rem
 		width 92.5%
 		height 6rem
 		border 8px solid $fg
 		opacity 0
+
+		+mq('bp-4')
+			padding 1rem
 
 		&.is-visible
 			opacity 1
@@ -119,6 +124,7 @@
 
 	.content__slider
 		max-width $perception-width
+		width 85%
 
 	.content__scale
 		&.is-disabled
@@ -272,9 +278,13 @@
 			stroke-linecap round
 
 		.term circle
+			opacity 0
 			stroke-width 3px
 			stroke $fg
 			fill $bg
+
+			+mq('bp-4')
+				opacity 1
 
 		.family--lol
 			fill $c-lol
@@ -302,20 +312,22 @@
 			font-weight 400
 
 	figure .axis
+		position relative
 		display flex
 		justify-content space-between
 		align-items center
-		margin-right 32px
+		margin-right 8px
 		margin-left 84px
-		// background-color $green-dark
-		padding-top 1rem
+		padding-top 2rem
 		font-family $mono
+
+		+mq('bp-4')
+			padding-top 1rem
 
 		p
 			margin 0
 			padding 0
 			set-type-size(xx-small, false)
-			width 50%
 			color $fg
 			line-height 1
 
@@ -323,13 +335,21 @@
 				set-type-size(small, false)
 
 			&:nth-of-type(2)
-				set-type-size(medium, false)
+				set-type-size(small, false)
+				position absolute
+				top 0
+				left 50%
 				text-align center
 				text-transform uppercase
 				font-weight 600
+				transform translate(-50%, 50%)
 
 				+mq('bp-4')
 					set-type-size(large, false)
+					position relative
+					top auto
+					left auto
+					transform none
 
 			&:last-of-type
 				text-align right

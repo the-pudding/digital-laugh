@@ -273,8 +273,8 @@ function cleanData({ results, data }) {
         ...v,
         value: +v.value,
       }));
-      const post = { value: 5.05, count: 0 };
-      const pre = { value: 0.95, count: 0 };
+      const post = { value: 5.01, count: 0 };
+      const pre = { value: 0.99, count: 0 };
       histogram.push(post);
       histogram.unshift(pre);
 

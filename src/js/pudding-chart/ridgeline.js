@@ -25,7 +25,7 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
     const marginTop = 32;
     const marginBottom = 32;
     const marginLeft = 84;
-    const marginRight = 32;
+    const marginRight = 8;
     let width = 0;
     let height = 0;
     let term = null;
@@ -129,9 +129,11 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
             $t.append('circle')
               .attr('class', 'slider--min')
               .attr('r', SLIDER_R);
+
             $t.append('circle')
               .attr('class', 'slider--max')
               .attr('r', SLIDER_R);
+
             $t.append('text')
               .attr('class', 'text--label')
               .attr('x', 0)
@@ -203,7 +205,9 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
         $sorted
           .selectAll('circle')
           .attr('cy', scaleY.range()[0])
-          .style('opacity', d => (revealedTerms.includes(d.key) ? 1 : 0));
+          .style('opacity', d =>
+            revealedValues.find(v => v.term === d.key) ? 1 : 0
+          );
 
         $sorted.select('.slider--min').attr('cx', d => {
           const match = revealedValues.find(v => v.term === d.key);
