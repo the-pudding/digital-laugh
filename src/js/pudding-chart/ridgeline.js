@@ -1,6 +1,5 @@
 /* global d3 */
 import uniq from 'lodash.uniqby';
-import generateID from '../generate-id';
 
 /*
  USAGE (example: line chart)
