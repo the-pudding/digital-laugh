@@ -134,6 +134,14 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
               .attr('class', 'slider--max')
               .attr('r', SLIDER_R);
             $t.append('text')
+              .attr('class', 'text--label')
+              .attr('x', 0)
+              .attr('y', 0)
+              .attr('text-anchor', 'end')
+              .attr('alignment-baseline', 'baseline');
+
+            $t.append('text')
+              .attr('class', 'text--count')
               .attr('x', 0)
               .attr('y', 0)
               .attr('text-anchor', 'end')
@@ -182,10 +190,16 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
           .attr('y2', scaleY.range()[0]);
 
         $sorted
-          .select('text')
+          .select('.text--label')
           .text(d => d.key)
           .attr('x', -12)
           .attr('y', scaleY.range()[0]);
+
+        $sorted
+          .select('.text--count')
+          .text(d => `${d3.format(',')(d.count)} votes`)
+          .attr('x', -12)
+          .attr('y', scaleY.range()[0] + TEXT_HEIGHT * 0.75);
 
         $sorted
           .selectAll('circle')
