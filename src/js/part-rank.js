@@ -31,12 +31,15 @@ const SLIDER_STEP = 0.05;
 
 const mt = new MoveTo();
 
+const terms = [];
+
 let resultsData = [];
 let chart = null;
 let slider = null;
 let min = null;
 let max = null;
 let showAll = false;
+let order = 0;
 
 function resize() {
   if ($content.size()) {
@@ -100,18 +103,25 @@ function updateFigureHeight() {
 function handleSubmitClick() {
   $submitButton.classed('is-disabled', true);
   const term = $submitButton.attr('data-term');
-  chart.reveal({ term, min, max });
+  chart
+    .reveal({ term, min, max })
+    .resize()
+    .render();
   $figure.classed('is-visible', true);
 
   $terms.select(`[data-term='${term}']`).classed('is-complete', true);
 
-  resetUI();
+  db.update({ key: term, min, max, order });
 
-  mt.move($spacer.node());
-  db.update({ key: term, min, max });
+  order += 1;
+
+  const count = chart.termCount();
+  if ($terms.size() === count) db.finish();
 
   updateFigureHeight();
-  // TODO all submitted
+  mt.move($spacer.node());
+
+  resetUI();
 }
 
 function handleAnotherClick() {
@@ -122,15 +132,15 @@ function handleAnotherClick() {
 function handleSkipClick() {
   showAll = true;
 
-  const terms = [];
-
-  $termLi.each((d, i, n) => {
-    terms.push(d3.select(n[i]).text());
-  });
-
   min = null;
   max = null;
-  chart.all(terms);
+
+  chart
+    .all(terms)
+    .resize()
+    .render();
+
+  db.setResults();
 
   $skipButton.classed('is-hidden', true);
   $sortButtons.classed('is-visible', true);
@@ -179,6 +189,7 @@ function handleTermClick() {
 function handleSlider([a, b]) {
   min = +a;
   max = +b;
+
   $scaleItem.classed(
     'is-active',
     d => d >= Math.round(min) && d <= Math.round(max)
@@ -208,6 +219,9 @@ function setupSlider() {
 
 function setupTermButtons() {
   $termLi.select('button').on('click', handleTermClick);
+  $termLi.each((d, i, n) => {
+    terms.push(d3.select(n[i]).text());
+  });
 }
 
 function setupNavButtons() {
@@ -219,8 +233,31 @@ function setupNavButtons() {
 
 function setupDB() {
   db.setup();
-  const returner = db.getReturner();
-  console.log({ returner });
+  const seenResults = db.getSeenResults();
+  const answers = db.getAnswers();
+
+  answers.sort((a, b) => d3.ascending(+a.order, +b.order));
+
+  answers.forEach(({ key, min, max }) => {
+    const term = key;
+    chart.reveal({ term, min, max });
+    $terms.select(`[data-term='${term}']`).classed('is-complete', true);
+  });
+
+  if (answers.length) {
+    chart.resize().render();
+    $figure.classed('is-visible', true);
+    updateFigureHeight();
+  }
+
+  if (seenResults) {
+    showAll = true;
+    chart.all(terms);
+    $skipButton.classed('is-hidden', true);
+    $sortButtons.classed('is-visible', true);
+    $figure.classed('is-visible', true);
+    updateFigureHeight();
+  }
 }
 
 function cleanData({ results, data }) {
@@ -271,8 +308,8 @@ function setup(data) {
   setupSlider();
   setupTermButtons();
   setupNavButtons();
-  setupDB();
   setupResults(data);
+  setupDB();
 }
 
 function init() {

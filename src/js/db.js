@@ -21,6 +21,14 @@ function getAnswer(id) {
   return null;
 }
 
+function getAnswers() {
+  if (userData.answers)
+    return Object.keys(userData.answers)
+      .map(k => userData.answers[k])
+      .map(d => ({ ...d, min: +d.min, max: +d.max }));
+  return null;
+}
+
 function getAnswerCount() {
   return Object.keys(userData.answers).length;
 }
@@ -31,6 +39,15 @@ function hasAnswers() {
 
 function getReturner() {
   return userData.returner;
+}
+
+function getSeenResults() {
+  return userData.results;
+}
+
+function setResults() {
+  userData.results = 'true';
+  if (hasStorage) window.localStorage.setItem('pudding_laugh_results', 'true');
 }
 
 function setReturner() {
@@ -50,8 +67,9 @@ function setupUserData() {
     answers = answers ? JSON.parse(answers) : {};
 
     const returner = window.localStorage.getItem('pudding_laugh_returner');
+    const results = window.localStorage.getItem('pudding_laugh_results');
 
-    return { id, answers, returner };
+    return { id, answers, returner, results };
   }
 
   const newID = generateID();
@@ -77,13 +95,14 @@ function clear() {
   localStorage.removeItem('pudding_laugh_answers');
   localStorage.removeItem('pudding_laugh_finished');
   localStorage.removeItem('pudding_laugh_returner');
+  localStorage.removeItem('pudding_laugh_results');
 }
 
 function setup() {
   if (window.location.host.includes('localhost')) clear();
   userData = setupUserData();
   if (!userData.finished) connect();
-  console.log({ userData });
+  // console.log({ userData });
 }
 
 function closeConnection() {
@@ -105,17 +124,18 @@ function getSubmissions(data) {
   Object.keys(data).forEach(d => {
     const g = data[d];
     // add to submit list
-    if (g.store) output[d] = g;
+    if (g.store === 'true') output[d] = g;
   });
   return output;
 }
 
-function update({ key, min, max }) {
+function update({ key, min, max, order }) {
   userData.answers[key] = {
     key,
+    order,
     min: min ? formatDecimal(min) : '1.00',
     max: max ? formatDecimal(max) : '5.00',
-    store: min && max,
+    store: min && max ? 'true' : 'false',
   };
   if (hasStorage)
     window.localStorage.setItem(
@@ -141,6 +161,9 @@ export default {
   update,
   finish,
   getAnswer,
+  getAnswers,
+  getSeenResults,
+  setResults,
   hasAnswers,
   setReturner,
   getReturner,

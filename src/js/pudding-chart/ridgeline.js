@@ -192,7 +192,6 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
           .attr('cy', scaleY.range()[0])
           .style('opacity', d => (revealedTerms.includes(d.key) ? 1 : 0));
 
-        console.log(revealedValues);
         $sorted.select('.slider--min').attr('cx', d => {
           const match = revealedValues.find(v => v.term === d.key);
           return scaleX(match ? match.min : 0);
@@ -219,16 +218,15 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
         term = val.term;
         revealedTerms.push(val.term);
         revealedValues.push(val);
-        Chart.resize();
-        Chart.render();
         return Chart;
+      },
+      termCount() {
+        return revealedTerms.length;
       },
       all(val) {
         term = null;
         showAll = true;
         revealedTerms = uniq(revealedTerms.concat(val));
-        Chart.resize();
-        Chart.render();
         return Chart;
       },
       height() {
