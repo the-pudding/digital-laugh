@@ -221,10 +221,26 @@ function setupSlider() {
 }
 
 function setupTermButtons() {
-  $termLi.select('button').on('click', handleTermClick);
+  const tempData = [];
+
   $termLi.each((d, i, n) => {
-    terms.push(d3.select(n[i]).text());
+    const $t = d3.select(n[i]);
+    const term = $t.attr('data-term');
+    terms.push(term);
+    const r = Math.random();
+    tempData.push({ term, r });
   });
+
+	tempData.sort((a, b) => d3.ascending(a.r, b.r));
+  $terms
+    .selectAll('li')
+    .data(tempData)
+    .join('li')
+    .attr('data-term', d => d.term)
+    .select('button')
+    .text(d => d.term);
+
+  $termLi.select('button').on('click', handleTermClick);
 }
 
 function setupNavButtons() {
