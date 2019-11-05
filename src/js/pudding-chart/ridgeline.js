@@ -34,7 +34,6 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
 
     // scales
     const scaleX = d3.scaleLinear();
-    const scaleY = d3.scaleLinear();
     const generateArea = d3.area();
     const generateLine = d3.line();
 
@@ -99,19 +98,26 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
       render() {
         if (!data.length) return null;
 
-        const maxCount = d3.max(data, d => d3.max(d.histogram, v => v.count));
         const valueExtent = d3.extent(data[0].histogram, d => d.value);
 
         scaleX.domain(valueExtent).range([0, width]);
 
-        scaleY.domain([0, maxCount]).range([MAX_HEIGHT, 0]);
+        const scaleY = {};
 
-        generateLine.x(d => scaleX(d.value)).y(d => scaleY(d.count));
+        data.forEach(d => {
+          const maxCount = d3.max(d.histogram, v => v.count);
+          scaleY[d.key] = d3
+            .scaleLinear()
+            .domain([0, maxCount])
+            .range([MAX_HEIGHT, 0]);
+        });
+
+        generateLine.x(d => scaleX(d.value)).y(d => scaleY[d.key](d.count));
 
         generateArea
           .x(d => scaleX(d.value))
-          .y0(scaleY(0))
-          .y1(d => scaleY(d.count));
+          .y0(d => scaleY[d.key](0))
+          .y1(d => scaleY[d.key](d.count));
 
         const $term = $vis
           .selectAll('.term')
@@ -187,24 +193,24 @@ d3.selection.prototype.puddingChartRidgeline = function init(options) {
         $sorted
           .select('.baseline')
           .attr('x2', scaleX.range()[1])
-          .attr('y1', scaleY.range()[0])
-          .attr('y2', scaleY.range()[0]);
+          .attr('y1', d => scaleY[d.key].range()[0])
+          .attr('y2', d => scaleY[d.key].range()[0]);
 
         $sorted
           .select('.text--label')
           .text(d => d.key)
           .attr('x', -12)
-          .attr('y', scaleY.range()[0]);
+          .attr('y', d => scaleY[d.key].range()[0]);
 
         $sorted
           .select('.text--count')
           .text(d => `${d3.format(',')(d.count)} votes`)
           .attr('x', -12)
-          .attr('y', scaleY.range()[0] + TEXT_HEIGHT * 0.75);
+          .attr('y', d => scaleY[d.key].range()[0] + TEXT_HEIGHT * 0.75);
 
         $sorted
           .selectAll('circle')
-          .attr('cy', scaleY.range()[0])
+          .attr('cy', d => scaleY[d.key].range()[0])
           .style('opacity', d =>
             revealedValues.find(v => v.term === d.key) ? 1 : 0
           );

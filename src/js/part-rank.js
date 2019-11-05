@@ -272,9 +272,10 @@ function cleanData({ results, data }) {
       const histogram = d.histogram.map(v => ({
         ...v,
         value: +v.value,
+        key: d.key,
       }));
-      const post = { value: 5.01, count: 0 };
-      const pre = { value: 0.99, count: 0 };
+      const post = { value: 5.01, count: 0, key: d.key };
+      const pre = { value: 0.99, count: 0, key: d.key };
       histogram.push(post);
       histogram.unshift(pre);
 
