@@ -117,10 +117,6 @@ function handleSubmitClick() {
 
   order += 1;
 
-  const count = chart.termCount();
-  // console.log(count, $terms.size());
-  // if ($terms.size() === count) db.finish();
-
   updateFigureHeight();
   mt.move($spacer.node());
 
