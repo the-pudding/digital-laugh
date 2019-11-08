@@ -118,7 +118,8 @@ function handleSubmitClick() {
   order += 1;
 
   const count = chart.termCount();
-  if ($terms.size() === count) db.finish();
+  // console.log(count, $terms.size());
+  // if ($terms.size() === count) db.finish();
 
   updateFigureHeight();
   mt.move($spacer.node());
@@ -231,7 +232,7 @@ function setupTermButtons() {
     tempData.push({ term, r });
   });
 
-	tempData.sort((a, b) => d3.ascending(a.r, b.r));
+  tempData.sort((a, b) => d3.ascending(a.r, b.r));
   $terms
     .selectAll('li')
     .data(tempData)
