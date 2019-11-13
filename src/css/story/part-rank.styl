@@ -308,8 +308,11 @@
 
 		.text--count
 			fill $gray-dark
-			set-type-size(x-small, false)
+			set-type-size(xxx-small, false)
 			font-weight 400
+
+			+mq('bp-4')
+				set-type-size(x-small, false)
 
 	figure .axis
 		position relative
